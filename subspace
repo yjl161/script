@@ -65,6 +65,8 @@ ExecStart=$(which subspace) \
   --wasm-execution compiled \
   --execution wasm \
   --bootnodes "/dns/farm-rpc.subspace.network/tcp/30333/p2p/12D3KooWPjMZuSYj35ehced2MTJFf95upwpHKgKUrFRfHwohzJXr" \
+  --rpc-port 9933 \
+  --ws-port 9944 \
   --rpc-cors all \
   --rpc-methods unsafe \
   --ws-external \
