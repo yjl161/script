@@ -143,12 +143,12 @@ break
 
 "Create Validator")
 quicksilverd tx staking create-validator \
-  --amount 1000000uqck \
+  --amount 4500000uqck \
   --from $WALLETNAME \
   --commission-max-change-rate "0.05" \
   --commission-max-rate "0.20" \
   --commission-rate "0.05" \
-  --min-self-delegation "4" \
+  --min-self-delegation "1" \
   --pubkey $(quicksilverd tendermint show-validator) \
   --moniker $NODENAME \
   --chain-id $CHAIN_ID \
