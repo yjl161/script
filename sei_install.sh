@@ -18,6 +18,9 @@ if [ ! $NODENAME ]; then
 	read -p "Enter node name: " NODENAME
 	echo 'export NODENAME='$NODENAME >> $HOME/.bash_profile
 fi
+
+sleep 2
+
 if [ ! $WALLET ]; then
 	read -p "Enter wallet name: " WALLET
 	echo 'export WALLET='$WALLET >> $HOME/.bash_profile
@@ -124,6 +127,9 @@ sudo mv $HOME/seid.service /etc/systemd/system/
 sudo systemctl daemon-reload
 sudo systemctl enable seid
 sudo systemctl restart seid
+
+seid keys add $WALLET
+
 
 echo '=============== SETUP FINISHED ==================='
 echo -e 'To check logs: \e[1m\e[32mjournalctl -u seid -f -o cat \e[0m'
