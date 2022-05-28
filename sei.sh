@@ -18,7 +18,10 @@ if [ ! $NODENAME ]; then
 	read -p "Enter node name: " NODENAME
 	echo 'export NODENAME='$NODENAME >> $HOME/.bash_profile
 fi
-echo "export WALLET=sei-001" >> $HOME/.bash_profile
+if [ ! $WALLET ]; then
+	read -p "Enter wallet name: " WALLET
+	echo 'export WALLET='$WALLET >> $HOME/.bash_profile
+fi
 echo "export CHAIN_ID=sei-testnet-1" >> $HOME/.bash_profile
 source $HOME/.bash_profile
 
