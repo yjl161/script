@@ -59,7 +59,6 @@ seid config keyring-backend file
 # init
 seid init $NODENAME --chain-id $CHAIN_ID
 
-seid keys add $WALLETNAME
 
 # download genesis and addrbook
 wget -qO $HOME/.sei-chain/config/genesis.json "https://raw.githubusercontent.com/sei-protocol/testnet/master/sei-testnet-1/genesis.json"
