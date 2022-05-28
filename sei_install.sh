@@ -1,33 +1,17 @@
 #!/bin/bash
-echo "=================================================="
-echo -e "\033[0;35m"
-echo " :::    ::: ::::::::::: ::::    :::  ::::::::  :::::::::  :::::::::: ::::::::  ";
-echo " :+:   :+:      :+:     :+:+:   :+: :+:    :+: :+:    :+: :+:       :+:    :+: ";
-echo " +:+  +:+       +:+     :+:+:+  +:+ +:+    +:+ +:+    +:+ +:+       +:+        ";
-echo " +#++:++        +#+     +#+ +:+ +#+ +#+    +:+ +#+    +:+ +#++:++#  +#++:++#++ ";
-echo " +#+  +#+       +#+     +#+  +#+#+# +#+    +#+ +#+    +#+ +#+              +#+ ";
-echo " #+#   #+#  #+# #+#     #+#   #+#+# #+#    #+# #+#    #+# #+#       #+#    #+# ";
-echo " ###    ###  #####      ###    ####  ########  #########  ########## ########  ";
-echo -e "\e[0m"
-echo "=================================================="
 
-sleep 2
-
-# set vars
-if [ ! $NODENAME ]; then
-	read -p "Enter node name: " NODENAME
-	echo 'export NODENAME='$NODENAME >> $HOME/.bash_profile
-fi
-
-sleep 2
-
-if [ ! $WALLET ]; then
-	read -p "Enter wallet name: " WALLET
-	echo 'export WALLET='$WALLET >> $HOME/.bash_profile
-fi
-echo "export CHAIN_ID=sei-testnet-1" >> $HOME/.bash_profile
-source $HOME/.bash_profile
-
+echo "============================================================"
+echo "Install start"
+echo "============================================================"
+echo "Setup NodeName:"
+read NODENAME
+echo "============================================================"
+echo "Setup WalletName:"
+read WALLETNAME
+echo export NODENAME=${NODENAME} >> $HOME/.bash_profile
+echo export WALLETNAME=${WALLETNAME} >> $HOME/.bash_profile
+echo export CHAIN_ID=sei-testnet-1 >> $HOME/.bash_profile
+source ~/.bash_profile
 # Set peers!
 PEERS="67cd4f00052f81d4abbcc8013e300b302a3ffe6e@95.216.189.214:26656,5082637d2face9dd32c4ad7eff34d38df4244c9a@65.21.123.69:26641,4aaa57eb2ed8f839253193a893389338c081929b@80.82.215.233:26656,38b4d78c7d6582fb170f6c19330a7e37e6964212@194.163.189.114:46656,27aab76f983cd7c6558f1dfc50b919daaef14555@3.22.112.181:26656,585727dac5df8f8662a8ff42052a9584a1f7ee95@165.22.25.77:26656,dc882e58c0c51763a12423dfcac5815ef092bc29@65.108.202.114:26656"
 
@@ -35,7 +19,7 @@ sed -i.bak -e "s/^persistent_peers =./persistent_peers = "$PEERS"/" $HOME/.sei-c
 
 echo '================================================='
 echo -e "Your node name: \e[1m\e[32m$NODENAME\e[0m"
-echo -e "Your wallet name: \e[1m\e[32m$WALLET\e[0m"
+echo -e "Your wallet name: \e[1m\e[32m$WALLETNAME\e[0m"
 echo -e "Your chain name: \e[1m\e[32m$CHAIN_ID\e[0m"
 echo -e '================================================='
 sleep 2
@@ -74,6 +58,8 @@ seid config keyring-backend file
 
 # init
 seid init $NODENAME --chain-id $CHAIN_ID
+
+seid keys add $WALLETNAME
 
 # download genesis and addrbook
 wget -qO $HOME/.sei-chain/config/genesis.json "https://raw.githubusercontent.com/sei-protocol/testnet/master/sei-testnet-1/genesis.json"
@@ -128,7 +114,7 @@ sudo systemctl daemon-reload
 sudo systemctl enable seid
 sudo systemctl restart seid
 
-seid keys add $WALLET
+
 
 
 echo '=============== SETUP FINISHED ==================='
