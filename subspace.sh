@@ -42,7 +42,7 @@ ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
 echo -e "\e[1m\e[32m3. Subspace Docer-compose yml \e[0m" && sleep 1
 mkdir $HOME/subspace
 cd $HOME/subspace
-
+echo -e "\e[1m\e[32m3. Subspace Docer-compose yml \e[0m" && sleep 1
 tee $HOME/subspace/docker-compose.yml > /dev/null <<EOF
 version: "3.7"
 services:
