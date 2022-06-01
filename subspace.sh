@@ -30,15 +30,12 @@ sudo rm /etc/systemd/system/subspace*
 
 echo -e "\e[1m\e[32m2. Install docker-compose \e[0m" && sleep 1
 cd $HOME
-echo -e "\e[1m\e[32m3. 2222222 \e[0m" && sleep 1
 sudo apt update && sudo apt purge docker docker-engine docker.io containerd docker-compose -y
 rm /usr/bin/docker-compose /usr/local/bin/docker-compose
 curl -fsSL https://get.docker.com -o get-docker.sh
-echo -e "\e[1m\e[32m3. 3333333 \e[0m" && sleep 1
 sh get-docker.sh
 curl -SL https://github.com/docker/compose/releases/download/v2.5.0/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose
 chmod +x /usr/local/bin/docker-compose
-echo -e "\e[1m\e[32m3. 4444444 \e[0m" && sleep 1
 ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
 
 echo -e "\e[1m\e[32m3. Subspace Docer-compose yml \e[0m" && sleep 1
