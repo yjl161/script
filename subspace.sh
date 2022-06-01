@@ -13,7 +13,7 @@ echo "Enter plot size:"
 read PLOT_SIZE
 echo export NODE_NAME=${NODE_NAME} >> $HOME/.bash_profile
 echo export WALLET=${WALLET} >> $HOME/.bash_profile
-echo export PLOT_SIZE=PLOT_SIZE >> $HOME/.bash_profile
+echo export PLOT_SIZE=${PLOT_SIZE} >> $HOME/.bash_profile
 source ~/.bash_profile
 
 sleep 2
