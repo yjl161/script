@@ -1,0 +1,68 @@
+#!/bin/bash
+echo "=================================================="
+echo -e "\033[0;35m"
+echo " :::    ::: ::::::::::: ::::    :::  ::::::::  :::::::::  :::::::::: ::::::::  ";
+echo " :+:   :+:      :+:     :+:+:   :+: :+:    :+: :+:    :+: :+:       :+:    :+: ";
+echo " +:+  +:+       +:+     :+:+:+  +:+ +:+    +:+ +:+    +:+ +:+       +:+        ";
+echo " +#++:++        +#+     +#+ +:+ +#+ +#+    +:+ +#+    +:+ +#++:++#  +#++:++#++ ";
+echo " +#+  +#+       +#+     +#+  +#+#+# +#+    +#+ +#+    +#+ +#+              +#+ ";
+echo " #+#   #+#  #+# #+#     #+#   #+#+# #+#    #+# #+#    #+# #+#       #+#    #+# ";
+echo " ###    ###  #####      ###    ####  ########  #########  ########## ########  ";
+echo -e "\e[0m"
+echo "=================================================="
+
+sleep 2
+
+# set vars
+if [ ! $NODENAME ]; then
+	read -p "Enter node name: " NODENAME
+	echo 'export NODENAME='$NODENAME >> $HOME/.bash_profile
+fi
+if [ ! $WALLETNAME ]; then
+	read -p "Enter wallet name: " WALLETNAME
+	echo 'export WALLETNAME='$WALLETNAME >> $HOME/.bash_profile
+fi
+echo "export CHAIN_ID=killerqueen-1" >> $HOME/.bash_profile
+source $HOME/.bash_profile
+
+echo '================================================='
+echo -e "Your node name: \e[1m\e[32m$NODENAME\e[0m"
+echo -e "Your wallet name: \e[1m\e[32m$WALLET\e[0m"
+echo -e "Your chain name: \e[1m\e[32m$CHAIN_ID\e[0m"
+echo -e '================================================='
+sleep 2
+
+echo -e "\e[1m\e[32m1. Updating packages... \e[0m" && sleep 1
+# update
+sudo apt update && sudo apt upgrade -y
+
+echo -e "\e[1m\e[32m2. Installing dependencies... \e[0m" && sleep 1
+# packages
+sudo apt install curl tar wget clang pkg-config libssl-dev jq build-essential bsdmainutils git make ncdu gcc git jq chrony liblz4-tool -y
+
+# install go
+ver="1.18.2"
+cd $HOME
+wget "https://golang.org/dl/go$ver.linux-amd64.tar.gz"
+sudo rm -rf /usr/local/go
+sudo tar -C /usr/local -xzf "go$ver.linux-amd64.tar.gz"
+rm "go$ver.linux-amd64.tar.gz"
+echo "export PATH=$PATH:/usr/local/go/bin:$HOME/go/bin" >> ~/.bash_profile
+source ~/.bash_profile
+go version
+
+echo -e "\e[1m\e[32m3. Downloading and building binaries... \e[0m" && sleep 1
+# download binary
+cd $HOME
+git clone https://github.com/ingenuity-build/quicksilver.git --branch v0.3.0
+cd quicksilver
+make build
+chmod +x ./build/quicksilverd && mv ./build/quicksilverd /usr/local/bin/quicksilverd
+
+# config
+quicksilverd config chain-id $CHAIN_ID
+quicksilverd config keyring-backend test
+
+# init
+quicksilverd init $NODENAME --chain-id $CHAIN_ID
+quicksilver keys add --recover $WALLETNAME
