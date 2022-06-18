@@ -1,15 +1,4 @@
 #!/bin/bash
-echo "=================================================="
-echo -e "\033[0;35m"
-echo " :::    ::: ::::::::::: ::::    :::  ::::::::  :::::::::  :::::::::: ::::::::  ";
-echo " :+:   :+:      :+:     :+:+:   :+: :+:    :+: :+:    :+: :+:       :+:    :+: ";
-echo " +:+  +:+       +:+     :+:+:+  +:+ +:+    +:+ +:+    +:+ +:+       +:+        ";
-echo " +#++:++        +#+     +#+ +:+ +#+ +#+    +:+ +#+    +:+ +#++:++#  +#++:++#++ ";
-echo " +#+  +#+       +#+     +#+  +#+#+# +#+    +#+ +#+    +#+ +#+              +#+ ";
-echo " #+#   #+#  #+# #+#     #+#   #+#+# #+#    #+# #+#    #+# #+#       #+#    #+# ";
-echo " ###    ###  #####      ###    ####  ########  #########  ########## ########  ";
-echo -e "\e[0m"
-echo "=================================================="
 
 sleep 2
 
@@ -18,16 +7,13 @@ if [ ! $NODENAME ]; then
 	read -p "Enter node name: " NODENAME
 	echo 'export NODENAME='$NODENAME >> $HOME/.bash_profile
 fi
-if [ ! $WALLETNAME ]; then
-	read -p "Enter wallet name: " WALLETNAME
-	echo 'export WALLETNAME='$WALLETNAME >> $HOME/.bash_profile
-fi
+echo "export WALLET=wallet" >> $HOME/.bash_profile
 echo "export CHAIN_ID=killerqueen-1" >> $HOME/.bash_profile
 source $HOME/.bash_profile
 
 echo '================================================='
 echo -e "Your node name: \e[1m\e[32m$NODENAME\e[0m"
-echo -e "Your wallet name: \e[1m\e[32m$WALLETNAME\e[0m"
+echo -e "Your wallet name: \e[1m\e[32m$WALLET\e[0m"
 echo -e "Your chain name: \e[1m\e[32m$CHAIN_ID\e[0m"
 echo -e '================================================='
 sleep 2
@@ -38,7 +24,7 @@ sudo apt update && sudo apt upgrade -y
 
 echo -e "\e[1m\e[32m2. Installing dependencies... \e[0m" && sleep 1
 # packages
-sudo apt install curl tar wget clang pkg-config libssl-dev jq build-essential bsdmainutils git make ncdu gcc git jq chrony liblz4-tool -y
+sudo apt install curl build-essential git wget jq make gcc tmux -y
 
 # install go
 ver="1.18.2"
@@ -65,4 +51,24 @@ quicksilverd config keyring-backend test
 
 # init
 quicksilverd init $NODENAME --chain-id $CHAIN_ID
-quicksilver keys add --recover $WALLETNAME
+
+# add wallet
+quicksilverd keys add $WALLET
+
+# fund your wallet
+WALLET_ADDRESS=$(quicksilverd keys show $WALLET -a)
+quicksilverd add-genesis-account $WALLET_ADDRESS 100000000uqck
+
+# generate gentx
+quicksilverd gentx $WALLET 100000000uqck \
+--commission-max-change-rate=0.01 \
+--commission-max-rate=0.20 \
+--commission-rate=0.05 \
+--pubkey=$(quicksilverd tendermint show-validator) \
+--chain-id $CHAIN_ID \
+--moniker $NODENAME
+sleep 2
+gentx=$(readlink -f $HOME/.quicksilverd/config/gentx/*)
+
+
+echo -e "Paste this content into the form:\n$(cat $gentx)"
