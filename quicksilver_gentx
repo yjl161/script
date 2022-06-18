@@ -7,13 +7,11 @@ if [ ! $NODENAME ]; then
 	read -p "Enter node name: " NODENAME
 	echo 'export NODENAME='$NODENAME >> $HOME/.bash_profile
 fi
-echo "export WALLET=wallet" >> $HOME/.bash_profile
 echo "export CHAIN_ID=killerqueen-1" >> $HOME/.bash_profile
 source $HOME/.bash_profile
 
 echo '================================================='
 echo -e "Your node name: \e[1m\e[32m$NODENAME\e[0m"
-echo -e "Your wallet name: \e[1m\e[32m$WALLET\e[0m"
 echo -e "Your chain name: \e[1m\e[32m$CHAIN_ID\e[0m"
 echo -e '================================================='
 sleep 2
@@ -47,28 +45,8 @@ chmod +x ./build/quicksilverd && mv ./build/quicksilverd /usr/local/bin/quicksil
 
 # config
 quicksilverd config chain-id $CHAIN_ID
-quicksilverd config keyring-backend test
 
 # init
 quicksilverd init $NODENAME --chain-id $CHAIN_ID
 
-# add wallet
-quicksilverd keys add $WALLET
 
-# fund your wallet
-WALLET_ADDRESS=$(quicksilverd keys show $WALLET -a)
-quicksilverd add-genesis-account $WALLET_ADDRESS 100000000uqck
-
-# generate gentx
-quicksilverd gentx $WALLET 100000000uqck \
---commission-max-change-rate=0.01 \
---commission-max-rate=0.20 \
---commission-rate=0.05 \
---pubkey=$(quicksilverd tendermint show-validator) \
---chain-id $CHAIN_ID \
---moniker $NODENAME
-sleep 2
-gentx=$(readlink -f $HOME/.quicksilverd/config/gentx/*)
-
-
-echo -e "Paste this content into the form:\n$(cat $gentx)"
