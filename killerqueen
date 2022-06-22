@@ -60,7 +60,6 @@ sudo chmod +x ./build/quicksilverd && sudo mv ./build/quicksilverd /usr/local/bi
 
 # config
 quicksilverd config chain-id $QUICKSILVER_CHAIN_ID
-quicksilverd config keyring-backend test
 quicksilverd config node tcp://localhost:${QUICKSILVER_PORT}657
 
 # init
