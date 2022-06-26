@@ -1,3 +1,5 @@
+#!/bin/bash
+
 sudo apt install curl build-essential git wget jq make gcc tmux unzip -y
 git clone https://github.com/ingenuity-build/interchain-accounts --branch main
 cd interchain-accounts
