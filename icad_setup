@@ -32,5 +32,5 @@ EOF
 
 sudo systemctl daemon-reload
 sudo systemctl enable icad
-sudo systemctl restart icad && sudo journalctl -u icad -f -o cat
+sudo systemctl restart icad
 
