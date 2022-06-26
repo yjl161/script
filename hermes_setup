@@ -1,0 +1,13 @@
+#!/bin/bash
+
+sleep 1
+
+cd ~
+wget https://github.com/informalsystems/ibc-rs/releases/download/v0.15.0/hermes-v0.15.0-x86_64-unknown-linux-gnu.zip
+unzip hermes-v0.15.0-x86_64-unknown-linux-gnu.zip
+sudo mv hermes /usr/local/bin
+hermes version
+
+mkdir $HOME/.hermes
+wget -qO $HOME/.hermes/config.toml "https://raw.githubusercontent.com/kj89/testnet_manuals/main/quicksilver/killerqueen-tasks/hermes-config.toml"
+
