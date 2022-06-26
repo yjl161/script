@@ -1,0 +1,12 @@
+sudo apt install curl build-essential git wget jq make gcc tmux unzip -y
+git clone https://github.com/ingenuity-build/interchain-accounts --branch main
+cd interchain-accounts
+make install
+source $HOME/.bash_profile
+icad init $NODENAME --chain-id kqcosmos-1
+wget -qO $HOME/.ica/config/genesis.json "https://raw.githubusercontent.com/ingenuity-build/testnets/main/killerqueen/kqcosmos-1/genesis.json"
+SEEDS="66b0c16486bcc7591f2c3f0e5164d376d06ee0d0@65.108.203.151:26656"
+PEERS=""
+sed -i -e "s/^seeds *=.*/seeds = \"$SEEDS\"/; s/^persistent_peers *=.*/persistent_peers = \"$PEERS\"/" $HOME/.ica/config/config.toml
+sed -i -e "s/^minimum-gas-prices *=.*/minimum-gas-prices = \"0uatom\"/" $HOME/.ica/config/app.toml
+icad tendermint unsafe-reset-all --home $HOME/.ica
