@@ -61,6 +61,21 @@ quicksilverd init $NODENAME --chain-id $QUICKSILVER_CHAIN_ID
 # download genesis and addrbook
 wget -O $HOME/.quicksilverd/config/genesis.json "https://raw.githubusercontent.com/ingenuity-build/testnets/main/killerqueen/genesis.json"
 
+#state_sync
+SNAP_RPC1="https://quicksilver-rpc.theamsolutions.info:443" \
+SNAP_RPC2="https://quicksilver-rpc.theamsolutions.info:443"
+
+LATEST_HEIGHT=$(curl -s $SNAP_RPC2/block | jq -r .result.block.header.height); \
+BLOCK_HEIGHT=$((LATEST_HEIGHT - 1000)); \
+TRUST_HASH=$(curl -s "$SNAP_RPC2/block?height=$BLOCK_HEIGHT" | jq -r .result.block_id.hash)
+
+echo $LATEST_HEIGHT $BLOCK_HEIGHT $TRUST_HASH
+
+sed -i.bak -E "s|^(enable[[:space:]]+=[[:space:]]+).*$|\1true| ; \
+s|^(rpc_servers[[:space:]]+=[[:space:]]+).*$|\1\"$SNAP_RPC1,$SNAP_RPC2\"| ; \
+s|^(trust_height[[:space:]]+=[[:space:]]+).*$|\1$BLOCK_HEIGHT| ; \
+s|^(trust_hash[[:space:]]+=[[:space:]]+).*$|\1\"$TRUST_HASH\"|" $HOME/.quicksilverd/config/config.toml
+
 # set peers and seeds
 SEEDS="dd3460ec11f78b4a7c4336f22a356fe00805ab64@seed.killerqueen-1.quicksilver.zone:26656"
 PEERS=""
