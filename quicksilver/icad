@@ -3,13 +3,14 @@
 sudo apt install curl build-essential git wget jq make gcc tmux unzip -y
 git clone https://github.com/ingenuity-build/interchain-accounts --branch main
 cd interchain-accounts
+source $HOME/.bash_profile
 make install
 
-source $HOME/.bash_profile
 icad init $NODENAME --chain-id kqcosmos-1
 wget -qO $HOME/.ica/config/genesis.json "https://raw.githubusercontent.com/ingenuity-build/testnets/main/killerqueen/kqcosmos-1/genesis.json"
 
-SNAP_RPC1="http://157.90.179.182:28657" && SNAP_RPC2="http://157.90.179.182:28657"
+SNAP_RPC1="http://157.90.179.182:28657" \
+&& SNAP_RPC2="http://157.90.179.182:28657"
 
 LATEST_HEIGHT=$(curl -s $SNAP_RPC2/block | jq -r .result.block.header.height) \
 && BLOCK_HEIGHT=$((LATEST_HEIGHT - 300)) \
@@ -22,10 +23,20 @@ s|^(rpc_servers[[:space:]]+=[[:space:]]+).*$|\1\"$SNAP_RPC1,$SNAP_RPC2\"| ; \
 s|^(trust_height[[:space:]]+=[[:space:]]+).*$|\1$BLOCK_HEIGHT| ; \
 s|^(trust_hash[[:space:]]+=[[:space:]]+).*$|\1\"$TRUST_HASH\"|" $HOME/.ica/config/config.toml
 
-SEEDS="66b0c16486bcc7591f2c3f0e5164d376d06ee0d0@65.108.203.151:26656"
-PEERS="3df77e9140b74b84e9d19040956acfe364fbb41a@157.90.179.182:28656"
-sed -i -e "s/^seeds *=.*/seeds = \"$SEEDS\"/; s/^persistent_peers *=.*/persistent_peers = \"$PEERS\"/" $HOME/.ica/config/config.toml
+peers="3df77e9140b74b84e9d19040956acfe364fbb41a@157.90.179.182:28656" \
+&& sed -i.bak -e "s/^persistent_peers *=.*/persistent_peers = \"$peers\"/" $HOME/.ica/config/config.toml
+
 sed -i -e "s/^minimum-gas-prices *=.*/minimum-gas-prices = \"0uatom\"/" $HOME/.ica/config/app.toml
+
+pruning="custom"
+pruning_keep_recent="100"
+pruning_keep_every="0"
+pruning_interval="50"
+sed -i -e "s/^pruning *=.*/pruning = \"$pruning\"/" $HOME/.ica/config/app.toml
+sed -i -e "s/^pruning-keep-recent *=.*/pruning-keep-recent = \"$pruning_keep_recent\"/" $HOME/.ica/config/app.toml
+sed -i -e "s/^pruning-keep-every *=.*/pruning-keep-every = \"$pruning_keep_every\"/" $HOME/.ica/config/app.toml
+sed -i -e "s/^pruning-interval *=.*/pruning-interval = \"$pruning_interval\"/" $HOME/.ica/config/app.toml
+
 icad tendermint unsafe-reset-all --home $HOME/.ica
 
 sudo tee /etc/systemd/system/icad.service > /dev/null <<EOF
