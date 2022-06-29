@@ -10,7 +10,7 @@ net user Administrator 123FuckTg++
 color f0
 echo Modify the remote desktop port and automatically add firewall rules
 echo %date% %time%
-set Port=46153:
+set /p Port=Please enter a number (1024 - 65535):
 if "%Port%"=="" goto end
 goto edit
 :edit
