@@ -21,7 +21,6 @@ Reg add "HKLM\SYSTEM\CurrentControlSet\Services\SharedAccess\Parameters\Firewall
 echo Success
 echo Now new RDP port is: %Port%
 echo Please restart computer
-pause
 exit
 :end
 echo Error. Please enter a correct number
