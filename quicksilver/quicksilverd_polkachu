@@ -1,0 +1,132 @@
+#!/bin/bash
+
+sleep 1
+
+# set vars
+if [ ! $NODENAME ]; then
+	read -p "Enter node name: " NODENAME
+	echo 'export NODENAME='$NODENAME >> $HOME/.bash_profile
+fi
+if [ ! $WALLET ]; then
+	read -p "Enter wallet name: " WALLET
+	echo 'export WALLET='$WALLET >> $HOME/.bash_profile
+fi
+QUICKSILVER_PORT=11
+echo "export QUICKSILVER_CHAIN_ID=killerqueen-1" >> $HOME/.bash_profile
+echo "export QUICKSILVER_PORT=${QUICKSILVER_PORT}" >> $HOME/.bash_profile
+source $HOME/.bash_profile
+
+echo '================================================='
+echo -e "Your node name: \e[1m\e[32m$NODENAME\e[0m"
+echo -e "Your chain name: \e[1m\e[32m$QUICKSILVER_CHAIN_ID\e[0m"
+echo -e "Your port: \e[1m\e[32m$QUICKSILVER_PORT\e[0m"
+echo '================================================='
+sleep 2
+
+echo -e "\e[1m\e[32m1. Updating packages... \e[0m" && sleep 1
+# update
+sudo apt update && sudo apt upgrade -y
+
+echo -e "\e[1m\e[32m2. Installing dependencies... \e[0m" && sleep 1
+# packages
+sudo apt install curl build-essential git wget jq make gcc tmux -y
+
+# install go
+ver="1.18.2"
+cd $HOME
+wget "https://golang.org/dl/go$ver.linux-amd64.tar.gz"
+sudo rm -rf /usr/local/go
+sudo tar -C /usr/local -xzf "go$ver.linux-amd64.tar.gz"
+rm "go$ver.linux-amd64.tar.gz"
+echo "export PATH=$PATH:/usr/local/go/bin:$HOME/go/bin" >> ~/.bash_profile
+source ~/.bash_profile
+go version
+
+echo -e "\e[1m\e[32m3. Downloading and building binaries... \e[0m" && sleep 1
+# download binary
+cd $HOME
+rm quicksilver -rf
+git clone https://github.com/ingenuity-build/quicksilver.git --branch v0.4.0
+cd quicksilver
+make build
+sudo chmod +x ./build/quicksilverd && sudo mv ./build/quicksilverd /usr/local/bin/quicksilverd
+
+# config
+quicksilverd config chain-id $QUICKSILVER_CHAIN_ID
+quicksilverd config node tcp://localhost:${QUICKSILVER_PORT}657
+
+# init
+quicksilverd init $NODENAME --chain-id $QUICKSILVER_CHAIN_ID
+
+# download genesis and addrbook
+wget -O $HOME/.quicksilverd/config/genesis.json "https://raw.githubusercontent.com/ingenuity-build/testnets/main/killerqueen/genesis.json"
+
+#state_sync
+SNAP_RPC="https://quicksilver-testnet-rpc.polkachu.com:443"
+
+LATEST_HEIGHT=$(curl -s $SNAP_RPC/block | jq -r .result.block.header.height); \
+BLOCK_HEIGHT=$((LATEST_HEIGHT - 2000)); \
+TRUST_HASH=$(curl -s "$SNAP_RPC/block?height=$BLOCK_HEIGHT" | jq -r .result.block_id.hash)
+
+sed -i.bak -E "s|^(enable[[:space:]]+=[[:space:]]+).*$|\1true| ; \
+s|^(rpc_servers[[:space:]]+=[[:space:]]+).*$|\1\"$SNAP_RPC,$SNAP_RPC\"| ; \
+s|^(trust_height[[:space:]]+=[[:space:]]+).*$|\1$BLOCK_HEIGHT| ; \
+s|^(trust_hash[[:space:]]+=[[:space:]]+).*$|\1\"$TRUST_HASH\"| ; \
+s|^(seeds[[:space:]]+=[[:space:]]+).*$|\1\"\"|" $HOME/.quicksilverd/config/config.toml
+
+# set peers and seeds
+peers="bc7340eaf80eb5af1bdbd3e340130dc3a0acc5c4@65.108.203.149:46656,3b789fcaab038c291be769f89481f3f117ee1fae@141.94.175.214:26656,c1b105e922ca552f573c77ff81ce3cd08fb9319d@167.71.199.105:26656,21e11937b8f3edb0917ecdba68a0b29452868b80@65.21.138.123:31656,f8a3edff0e355b79fb59f9c456005c6c0577bb46@66.94.104.239:26641,7e6fd896eb0890593e4cf42f1bff3b168d6d7812@62.171.166.145:26656,52127ab27d51e2e24d375be41475c68e422af070@139.162.224.211:26656,d1dabcd409ad2aff441cb061e975bb1a534746ef@139.59.27.113:26656,067b3182c56ff3ae8c546b1ea83f51732cc7144d@79.143.179.196:36656,b78a8d08b37b6f230cd664bd97b96ad4c1044394@135.181.73.169:26656,80699bb546c0a0776d4d6df6b65ae29adfaf9ff0@65.109.11.210:26656,efbfc1d3cc19ed9cf5c91d5f30ad63384df0d107@65.109.5.11:26656,6c26e9d1f3bdca420ec3f8aa3ef1589345198c6d@51.142.173.121:26656,241833817b8158bbdfb00f0b9dcc98d6b1f904ac@46.4.23.42:26656,97d01a9dcb4d3d9aa7e6a468af6e9709d5608c96@65.21.78.153:22656,c2baebdc5468ef0e86f7850bdd8cd91e20fa53b2@65.108.71.92:48656,dc89b5b3ea20dea776664957d8b8b193393ebfb4@157.245.62.255:26656,1210625ae17ceeef49f24677be91353016d6abef@49.12.235.196:11656,46d2eb9953403de555369ab5d144c713a6e5b960@144.76.67.53:2390,14b8c93f393d932acc495aea624d34ac8f295ab2@20.196.147.68:11656,fd1b1ef4740ba0d2b1401967e8b9acff35b08606@135.181.116.109:47656,db30514b881126e7e2c1039e963c1f8eee757cae@185.16.38.64:26651,288d55e8717bc3b617fc63a8919ff97d001abcd9@65.108.13.185:27060,3a33eff5b83b59dce2b4f4a0a4b2aed70beed78a@206.189.225.128:11656,afb43f610d5079a5037f6934352a79e7f2ca6b15@178.18.248.212:16656,48d6e6f74b22599fb80b63e3df15107057678701@195.201.164.226:26656,30d0025985d1e907912a8759cfe21a2213ba6faf@35.224.199.187:26656,6b1f78a111ac075e3ce9143db4e8375b3843a1ef@51.120.6.188:26656,c6c6539e9c12b4517cb72f4bdaabf32c9c248aec@195.201.59.194:36656,4742e1b942acf17c31794cce80d199886d172c4f@135.181.133.37:31656,46f2c06d93892bb0306e994be3a85dcbc960f0e2@38.242.129.21:26656,a82db24a213c11d56d90025b69d5b120dc980dc5@185.185.80.4:26656,b0ba6a25f368774c5592ba194212678cf7eb69f2@167.235.240.242:26846,ac09fd37615636c86bcb35192b290dd3e0e8f351@94.130.10.43:22656,93f63b93fecb9ba716a00084427a3123cd302756@95.217.215.48:26656,64c3a932243c8ce1866e4a2f8ed144acf1de319b@16.163.74.176:26616,f425b9104cb6884ff5c1a1a3ecfaeb50197588fc@134.209.20.3:656,dd6a22d3abbf5a0b41caab7f8f07dfe5450dac22@161.97.136.141:26651,8e9b1a38bf310b48201383e07ce88a41c5ba8a2c@35.184.165.108:26656,3f13b703772082de77a1f9e8132ce1c8c74b46f1@188.34.178.190:44656,fcfcf2402f106b300ada70fce2ff52603290c43a@104.248.112.44:11656,17ebee25761d45f1c91608e7bb60a64e15034794@165.232.82.55:36656,4b994f21ada989568ff61167b9fa803028d8a87c@212.71.251.165:26656,b3e959a0e0d9a56e4a14253b8330e0c0e968ac59@23.96.13.59:11656,6e145e44d2dbce1587af0d190d92fccb281a445e@159.69.26.0:11656,87835d9cf1d79a469ecc0c699e2d3a33c9513272@165.22.106.136:11656,8bc48ddff4b419b974edb7b48d0e78d0c34fbd62@62.171.157.3:11656,2c74cb0662157b6d1a2af125a51610360d6e59b1@194.146.12.11:44656,1c1ca90d704c22844570d57039ccf2e8f58e475d@80.64.208.123:26656" \
+&& PER_peers="83c84972af06b0a0b61e11a9ccde1cef4bb61786@135.181.59.162:11656" \
+&& sed -i.bak -e "s/^persistent_peers *=.*/persistent_peers = \"$PER_peers\"/" $HOME/.quicksilverd/config/config.toml
+
+
+# set custom ports
+sed -i.bak -e "s%^proxy_app = \"tcp://127.0.0.1:26658\"%proxy_app = \"tcp://127.0.0.1:${QUICKSILVER_PORT}658\"%; s%^laddr = \"tcp://127.0.0.1:26657\"%laddr = \"tcp://127.0.0.1:${QUICKSILVER_PORT}657\"%; s%^pprof_laddr = \"localhost:6060\"%pprof_laddr = \"localhost:${QUICKSILVER_PORT}060\"%; s%^laddr = \"tcp://0.0.0.0:26656\"%laddr = \"tcp://0.0.0.0:${QUICKSILVER_PORT}656\"%; s%^prometheus_listen_addr = \":26660\"%prometheus_listen_addr = \":${QUICKSILVER_PORT}660\"%" $HOME/.quicksilverd/config/config.toml
+sed -i.bak -e "s%^address = \"tcp://0.0.0.0:1317\"%address = \"tcp://0.0.0.0:${QUICKSILVER_PORT}317\"%; s%^address = \":8080\"%address = \":${QUICKSILVER_PORT}080\"%; s%^address = \"0.0.0.0:9090\"%address = \"0.0.0.0:${QUICKSILVER_PORT}090\"%; s%^address = \"0.0.0.0:9091\"%address = \"0.0.0.0:${QUICKSILVER_PORT}091\"%" $HOME/.quicksilverd/config/app.toml
+
+
+# config pruning
+pruning="custom"
+pruning_keep_every="2000"
+sed -i -e "s/^pruning *=.*/pruning = \"$pruning\"/" $HOME/.quicksilverd/config/app.toml
+sed -i -e "s/^pruning-keep-every *=.*/pruning-keep-every = \"$pruning_keep_every\"/" $HOME/.quicksilverd/config/app.toml
+
+snapshot-interval="2000"
+snapshot-keep-recent="5"
+sed -i -e "s/^snapshot-interval *=.*/snapshot-interval = $snapshot-interval/" $HOME/.quicksilverd/config/app.toml
+sed -i -e "s/^snapshot-keep-recent *=.*/snapshot-keep-recent = $snapshot-keep-recent/" $HOME/.quicksilverd/config/app.toml
+
+# set minimum gas price
+sed -i -e "s/^minimum-gas-prices *=.*/minimum-gas-prices = \"0uqck\"/" $HOME/.quicksilverd/config/app.toml
+
+# enable prometheus
+sed -i -e "s/prometheus = false/prometheus = true/" $HOME/.quicksilverd/config/config.toml
+
+# reset
+quicksilverd tendermint unsafe-reset-all --home $HOME/.quicksilverd
+
+echo -e "\e[1m\e[32m4. Starting service... \e[0m" && sleep 1
+# create service
+sudo tee /etc/systemd/system/quicksilverd.service > /dev/null <<EOF
+[Unit]
+Description=quicksilver
+After=network-online.target
+[Service]
+User=$USER
+ExecStart=$(which quicksilverd) start
+Restart=on-failure
+RestartSec=3
+LimitNOFILE=65535
+[Install]
+WantedBy=multi-user.target
+EOF
+
+# start service
+sudo systemctl daemon-reload
+sudo systemctl enable quicksilverd
+sudo systemctl restart quicksilverd
+
+
+echo '=============== SETUP FINISHED ==================='
+echo -e 'To check logs: \e[1m\e[32mjournalctl -u quicksilverd -f -o cat\e[0m'
+echo -e "To check sync status: \e[1m\e[32mcurl -s localhost:${QUICKSILVER_PORT}657/status | jq .result.sync_info\e[0m"
