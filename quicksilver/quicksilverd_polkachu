@@ -91,10 +91,10 @@ pruning_keep_every="2000"
 sed -i -e "s/^pruning *=.*/pruning = \"$pruning\"/" $HOME/.quicksilverd/config/app.toml
 sed -i -e "s/^pruning-keep-every *=.*/pruning-keep-every = \"$pruning_keep_every\"/" $HOME/.quicksilverd/config/app.toml
 
-snapshot-interval="2000"
-snapshot-keep-recent="5"
-sed -i -e "s/^snapshot-interval *=.*/snapshot-interval = $snapshot-interval/" $HOME/.quicksilverd/config/app.toml
-sed -i -e "s/^snapshot-keep-recent *=.*/snapshot-keep-recent = $snapshot-keep-recent/" $HOME/.quicksilverd/config/app.toml
+snapshot_interval="2000"
+snapshot_keep_recent="5"
+sed -i -e "s/^snapshot-interval *=.*/snapshot-interval = $snapshot_interval/" $HOME/.quicksilverd/config/app.toml
+sed -i -e "s/^snapshot-keep-recent *=.*/snapshot-keep-recent = $snapshot_keep_recent/" $HOME/.quicksilverd/config/app.toml
 
 # set minimum gas price
 sed -i -e "s/^minimum-gas-prices *=.*/minimum-gas-prices = \"0uqck\"/" $HOME/.quicksilverd/config/app.toml
