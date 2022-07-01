@@ -1,8 +1,7 @@
 #!/bin/bash
 
 cd $HOME
-rm quic
-ksilver -rf
+rm quicksilver -rf
 git clone https://github.com/ingenuity-build/quicksilver.git --branch v0.4.1
 cd quicksilver
 make build
