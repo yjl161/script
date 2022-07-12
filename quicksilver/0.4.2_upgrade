@@ -4,7 +4,7 @@ RED_COLOR='\033[0;31m'
 NO_COLOR='\033[0m'
 BLOCK=212000
 VERSION=v0.4.2
-echo -e "$GREEN_COLOR YOUR NODE WILL BE UPDATED TO VERSION: $VERSION ON BLOCK NUMBER: $BLOCK $NO_COLOR\n"
+echo -e "YOUR NODE WILL BE UPDATED TO VERSION: $VERSION ON BLOCK NUMBER: $BLOCK\n"
 for((;;)); do
 height=$(quicksilverd status |& jq -r ."SyncInfo"."latest_block_height")
 if ((height>=$BLOCK)); then
