@@ -116,3 +116,4 @@ sudo systemctl enable strided
 sudo systemctl restart strided
 
 strided keys add $WALLET
+echo -e "NODE SETUP PROCESS END"
