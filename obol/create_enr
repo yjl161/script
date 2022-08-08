@@ -15,10 +15,20 @@ curl -SL https://github.com/docker/compose/releases/download/v2.5.0/docker-compo
 chmod +x /usr/local/bin/docker-compose
 ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
 
-
+sudo apt install git -y
 git clone https://github.com/ObolNetwork/charon-distributed-validator-node.git
 chmod o+w charon-distributed-validator-node
 cd charon-distributed-validator-node
 docker run --rm -v "$(pwd):/opt/charon" obolnetwork/charon:v0.9.0 create enr
 echo $PRIVATEKEY >| .charon/charon-enr-private-key
+
+echo "Press any key to continue"
+while [ true ] ; do
+read -t 3 -n 1
+if [ $? = 0 ] ; then
+exit ;
+else
+echo "waiting for the keypress"
+fi
+
 docker run --rm -v "$(pwd):/opt/charon" obolnetwork/charon:v0.9.0 create enr
