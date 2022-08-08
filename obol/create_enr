@@ -20,15 +20,6 @@ git clone https://github.com/ObolNetwork/charon-distributed-validator-node.git
 chmod o+w charon-distributed-validator-node
 cd charon-distributed-validator-node
 docker run --rm -v "$(pwd):/opt/charon" obolnetwork/charon:v0.9.0 create enr
-echo $PRIVATEKEY >| .charon/charon-enr-private-key
-
-echo "Press any key to continue"
-while [ true ] ; do
-read -t 3 -n 1
-if [ $? = 0 ] ; then
-exit ;
-else
-echo "waiting for the keypress"
-fi
-
+cd .charon
+echo $PRIVATEKEY >| charon-enr-private-key
 docker run --rm -v "$(pwd):/opt/charon" obolnetwork/charon:v0.9.0 create enr
