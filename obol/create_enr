@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if [ ! $PRIVATEKEY ]; then
-	read -p "Enter node name: " PRIVATEKEY
+	read -p "Enter private key: " PRIVATEKEY
 	echo 'export PRIVATEKEY='$PRIVATEKEY >> $HOME/.bash_profile
 fi
 
