@@ -14,4 +14,4 @@ ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
 git clone https://github.com/ObolNetwork/charon-distributed-validator-node.git
 chmod o+w charon-distributed-validator-node
 cd charon-distributed-validator-node
-docker run --rm -v "$(pwd):/opt/charon" ghcr.io/obolnetwork/charon:v0.8.1 create enr
+docker run --rm -v "$(pwd):/opt/charon" obolnetwork/charon:v0.9.0 create enr
