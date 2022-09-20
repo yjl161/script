@@ -53,7 +53,7 @@ services:
       - "0.0.0.0:30333:30333"
     restart: unless-stopped
     command: [
-      "--chain", "gemini-2",
+      "--chain", "gemini-2a",
       "--base-path", "/var/subspace",
       "--execution", "wasm",
       "--pruning", "archive",
@@ -74,10 +74,10 @@ services:
       node:
         condition: service_healthy
     image: ghcr.io/subspace/farmer:gemini-2a-2022-sep-10
-    ports:
-      - "127.0.0.1:9955:9955"
     volumes:
       - farmer-data:/var/subspace:rw
+    ports:
+      - "0.0.0.0:40333:40333"
     restart: unless-stopped
     command: [
       "--base-path", "/var/subspace",
