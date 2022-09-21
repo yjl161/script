@@ -1,4 +1,7 @@
-docker system prune -a
+cd subspace
+docker-compose down
+cd
+yes Y | docker system prune -a
 sudo apt-get purge -y docker-engine docker docker.io docker-ce docker-ce-cli docker-compose-plugin
 sudo apt-get autoremove -y --purge docker-engine docker docker.io docker-ce docker-compose-plugin
 sudo apt-get purge docker-ce-cli -y
