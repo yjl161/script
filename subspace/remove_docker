@@ -5,10 +5,12 @@ yes Y | docker system prune -a
 sudo apt-get purge -y docker-engine docker docker.io docker-ce docker-ce-cli docker-compose-plugin
 sudo apt-get autoremove -y --purge docker-engine docker docker.io docker-ce docker-compose-plugin
 sudo apt-get purge docker-ce-cli -y
-sudo rm rm -rf /usr/share/keyrings/docker-archive-keyring.gpg
-sudo rm -rf /var/lib/docker /etc/docker
-sudo rm /etc/apparmor.d/docker
+sudo rm -rf /usr/share/keyrings/docker-archive-keyring.gpg
+sudo rm -rf /var/lib/docker 
+sudo rm -rf /etc/docker
+sudo rm -rf /etc/apparmor.d/docker
 sudo groupdel docker
 sudo rm -rf /var/run/docker.sock
 sudo rm -rf /usr/local/bin/docker-compose
 sudo rm -rf /etc/docker
+sudo rm -rf subspace*
