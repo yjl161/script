@@ -17,9 +17,11 @@ mkdir nulink
 
 cp /root/geth-linux-amd64-1.10.23-d901d853/keystore/UTC--2022-10-19T03-06-38.328399316Z--34c71bec591bc7a5fb3db5f449010806e8e07e14 /root/nulink/
 chmod -R 777 /root/nulink
-virtualenv /root/nulink-venv
+
 
 pip install virtualenv
+virtualenv /root/nulink-venv
+source /root/nulink-venv/bin/activate
 wget https://filetransfer.nulink.org/release/nulink-0.1.0-py3-none-any.whl
 pip install nulink-0.1.0-py3-none-any.whl
 
@@ -37,10 +39,20 @@ docker run -it --rm \
 -v /root/nulink:/home/circleci/.local/share/nulink \
 -e NULINK_KEYSTORE_PASSWORD \
 nulink/nulink nulink ursula init \
---signer keystore:///code/UTC--2022-10-19T02-39-49.351685556Z--e1930707ca866451ade1c47178640979afebf9a0 \
+--signer keystore:///code/UTC--2022-10-19T03-06-38.328399316Z--34c71bec591bc7a5fb3db5f449010806e8e07e14 \
 --eth-provider https://data-seed-prebsc-2-s2.binance.org:8545/ \
 --network horus \
 --payment-provider https://data-seed-prebsc-2-s2.binance.org:8545/ \
 --payment-network bsc_testnet \
---operator-address 0xe1930707Ca866451ADe1c47178640979aFEBF9a0 \
+--operator-address 0x34C71BEc591bC7a5FB3DB5f449010806e8e07E14 \
 --max-gas-price 100
+
+
+docker run --restart on-failure -d \
+--name ursula \
+-p 9151:9151 \
+-v /root/nulink:/code \
+-v /root/nulink:/home/circleci/.local/share/nulink \
+-e NULINK_KEYSTORE_PASSWORD \
+-e NULINK_OPERATOR_ETH_PASSWORD \
+nulink/nulink nulink ursula run --no-block-until-ready
