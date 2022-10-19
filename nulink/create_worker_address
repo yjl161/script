@@ -1,28 +1,46 @@
-# step 1
+sudo apt update -y
+sudo apt install python3-pip -y
+sudo apt install ca-certificates curl gnupg lsb-release -y
+sudo apt install snapd -y
+snap install docker
+sleep 3
+docker pull nulink/nulink:latest
+
+
 wget https://gethstore.blob.core.windows.net/builds/geth-linux-amd64-1.10.23-d901d853.tar.gz
-
-# step 2
 tar -xvzf geth-linux-amd64-1.10.23-d901d853.tar.gz
-
-# step 3
 cd geth-linux-amd64-1.10.23-d901d853/
-
-# step 4
 ./geth account new --keystore ./keystore
 
-INFO [09-08|15:30:11.904] Maximum peer count                       ETH=50 LES=0 total=50
-INFO [09-08|15:30:11.905] Smartcard socket not found, disabling    err="stat /run/pcscd/pcscd.comm: no such file or directory"
-Your new account is locked with a password. Please give a password. Do not forget this password.
-Password: 
-Repeat password: 
+cd
+mkdir nulink
 
-Your new key was generated
+cp /root/geth-linux-amd64-1.10.23-d901d853/keystore/UTC--2022-10-19T03-06-38.328399316Z--34c71bec591bc7a5fb3db5f449010806e8e07e14 /root/nulink/
+chmod -R 777 /root/nulink
+virtualenv /root/nulink-venv
+
+pip install virtualenv
+wget https://filetransfer.nulink.org/release/nulink-0.1.0-py3-none-any.whl
+pip install nulink-0.1.0-py3-none-any.whl
 
 
-Public address of the key:   0x8B1819341BEc211a45a2186C4D0030681cccE0Ee
-Path of the secret key file: /root/geth-linux-amd64-1.10.23-d901d853/keystore/UTC--2022-09-13T01-14-32.465358210Z--8b1819341bec211a45a2186c4d0030681ccce0ee
 
-- You can share your public address with anyone. Others need it to interact with you.
-- You must NEVER share the secret key with anyone! The key controls access to your funds!
-- You must BACKUP your key file! Without the key, it's impossible to access account funds!
-- You must REMEMBER your password! Without the password, it's impossible to decrypt the key!
+export NULINK_KEYSTORE_PASSWORD=123xiewen++
+
+export NULINK_OPERATOR_ETH_PASSWORD=123xiewen++
+
+
+
+docker run -it --rm \
+-p 9151:9151 \
+-v /root/nulink:/code \
+-v /root/nulink:/home/circleci/.local/share/nulink \
+-e NULINK_KEYSTORE_PASSWORD \
+nulink/nulink nulink ursula init \
+--signer keystore:///code/UTC--2022-10-19T02-39-49.351685556Z--e1930707ca866451ade1c47178640979afebf9a0 \
+--eth-provider https://data-seed-prebsc-2-s2.binance.org:8545/ \
+--network horus \
+--payment-provider https://data-seed-prebsc-2-s2.binance.org:8545/ \
+--payment-network bsc_testnet \
+--operator-address 0xe1930707Ca866451ADe1c47178640979aFEBF9a0 \
+--max-gas-price 100
