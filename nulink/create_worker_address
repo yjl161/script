@@ -6,18 +6,7 @@ snap install docker
 sleep 3
 docker pull nulink/nulink:latest
 
-
-wget https://gethstore.blob.core.windows.net/builds/geth-linux-amd64-1.10.23-d901d853.tar.gz
-tar -xvzf geth-linux-amd64-1.10.23-d901d853.tar.gz
-cd geth-linux-amd64-1.10.23-d901d853/
-./geth account new --keystore ./keystore
-
-cd
-mkdir nulink
-
-cp /root/geth-linux-amd64-1.10.23-d901d853/keystore/UTC--2022-10-19T03-06-38.328399316Z--34c71bec591bc7a5fb3db5f449010806e8e07e14 /root/nulink/
 chmod -R 777 /root/nulink
-
 
 pip install virtualenv
 virtualenv /root/nulink-venv
@@ -25,11 +14,8 @@ source /root/nulink-venv/bin/activate
 wget https://filetransfer.nulink.org/release/nulink-0.1.0-py3-none-any.whl
 pip install nulink-0.1.0-py3-none-any.whl
 
-
-
-export NULINK_KEYSTORE_PASSWORD=123xiewen++
-
-export NULINK_OPERATOR_ETH_PASSWORD=123xiewen++
+export NULINK_KEYSTORE_PASSWORD=WALLET_PASSWORD
+export NULINK_OPERATOR_ETH_PASSWORD=WALLET_PASSWORD
 
 
 
@@ -39,12 +25,12 @@ docker run -it --rm \
 -v /root/nulink:/home/circleci/.local/share/nulink \
 -e NULINK_KEYSTORE_PASSWORD \
 nulink/nulink nulink ursula init \
---signer keystore:///code/UTC--2022-10-19T03-06-38.328399316Z--34c71bec591bc7a5fb3db5f449010806e8e07e14 \
+--signer keystore:///code/KEYSTORE_FILE_NAME \
 --eth-provider https://data-seed-prebsc-2-s2.binance.org:8545/ \
 --network horus \
 --payment-provider https://data-seed-prebsc-2-s2.binance.org:8545/ \
 --payment-network bsc_testnet \
---operator-address 0x34C71BEc591bC7a5FB3DB5f449010806e8e07E14 \
+--operator-address WALLET_ADDRESS \
 --max-gas-price 100
 
 
