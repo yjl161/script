@@ -24,7 +24,6 @@ echo export WORKER_ADDRESS=${WORKER_ADDRESS} >> $HOME/.bash_profile
 source ~/.bash_profile
 
 pip install virtualenv
-
 virtualenv /root/nulink-venv
 source /root/nulink-venv/bin/activate
 wget https://filetransfer.nulink.org/release/nulink-0.1.0-py3-none-any.whl
