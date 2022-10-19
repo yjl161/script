@@ -8,16 +8,26 @@ docker pull nulink/nulink:latest
 
 chmod -R 777 /root/nulink
 
+echo "============================================================"
+echo "Enter wallet password:"
+read WALLET_PASSWORD
+echo "============================================================"
+echo "Enter keystore file name:"
+read KEYSTORE_FILE_NAME
+echo "============================================================"
+echo "Enter worker address:"
+read WORKER_ADDRESS
+echo export NULINK_KEYSTORE_PASSWORD=${WALLET_PASSWORD} >> $HOME/.bash_profile
+echo export NULINK_OPERATOR_ETH_PASSWORD=${WALLET_PASSWORD} >> $HOME/.bash_profile
+echo export KEYSTORE_FILE_NAME=${KEYSTORE_FILE_NAME} >> $HOME/.bash_profile
+echo export WORKER_ADDRESS=${WORKER_ADDRESS} >> $HOME/.bash_profile
+source ~/.bash_profile
+
 pip install virtualenv
 virtualenv /root/nulink-venv
 source /root/nulink-venv/bin/activate
 wget https://filetransfer.nulink.org/release/nulink-0.1.0-py3-none-any.whl
 pip install nulink-0.1.0-py3-none-any.whl
-
-export NULINK_KEYSTORE_PASSWORD=WALLET_PASSWORD
-export NULINK_OPERATOR_ETH_PASSWORD=WALLET_PASSWORD
-
-
 
 docker run -it --rm \
 -p 9151:9151 \
@@ -25,12 +35,12 @@ docker run -it --rm \
 -v /root/nulink:/home/circleci/.local/share/nulink \
 -e NULINK_KEYSTORE_PASSWORD \
 nulink/nulink nulink ursula init \
---signer keystore:///code/KEYSTORE_FILE_NAME \
+--signer keystore:///code/$KEYSTORE_FILE_NAME \
 --eth-provider https://data-seed-prebsc-2-s2.binance.org:8545/ \
 --network horus \
 --payment-provider https://data-seed-prebsc-2-s2.binance.org:8545/ \
 --payment-network bsc_testnet \
---operator-address WALLET_ADDRESS \
+--operator-address $WORKER_ADDRESS \
 --max-gas-price 100
 
 
