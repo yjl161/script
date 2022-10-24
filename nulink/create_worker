@@ -23,12 +23,6 @@ echo export KEYSTORE_FILE_NAME=${KEYSTORE_FILE_NAME} >> $HOME/.bash_profile
 echo export WORKER_ADDRESS=${WORKER_ADDRESS} >> $HOME/.bash_profile
 source ~/.bash_profile
 
-pip install virtualenv
-virtualenv /root/nulink-venv
-source /root/nulink-venv/bin/activate
-wget https://download.nulink.org/release/core/nulink-0.2.0-py3-none-any.whl
-pip install nulink-0.2.0-py3-none-any.whl
-
 docker run -it --rm \
 -p 9151:9151 \
 -v /root/nulink:/code \
