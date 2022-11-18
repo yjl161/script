@@ -1,0 +1,14 @@
+sudo apt update
+sudo apt install build-essential -y
+sudo apt install pkg-config -y
+sudo apt install libssl-dev -y
+sudo curl https://sh.rustup.rs --proto '=https' --tlsv1.2 -sSf | sh -s -- -y
+source $HOME/.cargo/env
+rustup update
+git clone https://github.com/anoma/namada-trusted-setup.git
+cd namada-trusted-setup && git checkout v1.0.0-beta.11
+cargo build --release --bin namada-ts --features cli
+mv target/release/namada-ts /usr/local/bin
+screen
+
+namada-ts contribute default https://ceremony.namada.net SETUP_TOKEN
