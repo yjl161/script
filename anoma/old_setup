@@ -1,0 +1,37 @@
+#!/bin/bash
+
+sleep 2
+
+# set vars
+if [ ! $TOKEN ]; then
+	read -p "Enter token: " TOKEN
+	echo 'export TOKEN='$TOKEN >> $HOME/.bash_profile
+fi
+
+if [ ! $EMAIL ]; then
+	read -p "Enter email: " EMAIL
+	echo 'export EMAIL='$EMAIL >> $HOME/.bash_profile
+fi
+
+if [ ! $FIRST_NAME ]; then
+	read -p "Enter first name: " FIRST_NAME
+	echo 'export FIRST_NAME='$FIRST_NAME >> $HOME/.bash_profile
+fi
+
+if [ ! $LAST_NAME ]; then
+	read -p "Enter last name: " LAST_NAME
+	echo 'export LAST_NAME='$LAST_NAME >> $HOME/.bash_profile
+fi
+
+sudo apt update
+sudo apt install build-essential -y
+sudo apt install pkg-config -y
+sudo apt install libssl-dev -y
+sudo curl https://sh.rustup.rs --proto '=https' --tlsv1.2 -sSf | sh -s -- -y
+source $HOME/.cargo/env
+rustup update
+git clone https://github.com/anoma/namada-trusted-setup.git
+cd namada-trusted-setup && git checkout v1.0.0-beta.11
+cargo build --release --bin namada-ts --features cli
+mv target/release/namada-ts /usr/local/bin
+screen -S anoma_setup
