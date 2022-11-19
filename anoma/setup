@@ -2,27 +2,6 @@
 
 sleep 2
 
-# set vars
-if [ ! $TOKEN ]; then
-	read -p "Enter token: " TOKEN
-	echo 'export TOKEN='$TOKEN >> $HOME/.bash_profile
-fi
-
-if [ ! $EMAIL ]; then
-	read -p "Enter email: " EMAIL
-	echo 'export EMAIL='$EMAIL >> $HOME/.bash_profile
-fi
-
-if [ ! $FIRST_NAME ]; then
-	read -p "Enter first name: " FIRST_NAME
-	echo 'export FIRST_NAME='$FIRST_NAME >> $HOME/.bash_profile
-fi
-
-if [ ! $LAST_NAME ]; then
-	read -p "Enter last name: " LAST_NAME
-	echo 'export LAST_NAME='$LAST_NAME >> $HOME/.bash_profile
-fi
-
 sudo apt update
 sudo apt install build-essential -y
 sudo apt install pkg-config -y
