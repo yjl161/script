@@ -36,6 +36,3 @@ cargo build --release --bin namada-ts --features cli
 mv target/release/namada-ts /usr/local/bin
 screen -S anoma_setup
 
-
-namada-ts contribute default https://ceremony.namada.net $TOKEN
-
