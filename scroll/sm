@@ -4,7 +4,7 @@ sleep 2
 
 # set vars
 if [ ! $PRIVATE_KEY ]; then
-	read -p "Enter token: " PRIVATE_KEY
+	read -p "Enter private_key: " PRIVATE_KEY
 	echo 'export PRIVATE_KEY='$PRIVATE_KEY >> $HOME/.bash_profile
 fi
 
