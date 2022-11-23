@@ -17,7 +17,7 @@ git clone https://github.com/scroll-tech/scroll-contract-deploy-demo.git
 cd scroll-contract-deploy-demo
 yarn install
 cp .env.example .env
-sed -i 's/0xabc123abc123abc123abc123abc123abc123abc123abc123abc123abc123abc1/$PRIVATE_KEY/g' .env
+sed -i "s/0xabc123abc123abc123abc123abc123abc123abc123abc123abc123abc123abc1/$PRIVATE_KEY/g" .env
 yarn compile
 yarn deploy:scrollTestnet
 yarn test
