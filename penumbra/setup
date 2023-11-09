@@ -1,0 +1,8 @@
+sudo apt update
+sudo curl https://sh.rustup.rs --proto '=https' --tlsv1.2 -sSf | sh -s -- -y
+source "$HOME/.cargo/env"
+sudo DEBIAN_FRONTEND=noninteractive apt-get -yq install build-essential pkg-config libssl-dev clang git-lfs
+git lfs install
+git clone https://github.com/penumbra-zone/penumbra
+cd penumbra && git fetch && git checkout v0.63.1
+cargo build --release --bin pcli
