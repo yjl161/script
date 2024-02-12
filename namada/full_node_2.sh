@@ -1,3 +1,24 @@
+#!/bin/bash
+
+echo "============================================================"
+echo "Install start"
+echo "============================================================"
+echo "Enter Namada Version:"
+read NAMADA_TAG
+echo "============================================================"
+echo "Enter Chain Id:"
+read CHAIN_ID
+echo "============================================================"
+echo "Enter CBFT:"
+read CBFT
+echo "============================================================"
+
+echo export NAMADA_TAG=${NAMADA_TAG} >> $HOME/.bash_profile
+echo export CBFT=${CBFT} >> $HOME/.bash_profile
+echo export NAMADA_CHAIN_ID=${CHAIN_ID} >> $HOME/.bash_profile
+echo "export BASE_DIR=$HOME/.local/share/namada" >> ~/.bash_profile
+source ~/.bash_profile
+
 sudo curl https://sh.rustup.rs --proto '=https' --tlsv1.2 -sSf | sh -s -- -y
 source "$HOME/.cargo/env"
 
@@ -27,28 +48,10 @@ curl -OL https://github.com/protocolbuffers/protobuf/releases/download/v23.3/$PR
 sudo unzip -o $PROTOC_ZIP -d /usr/local bin/protoc
 sudo unzip -o $PROTOC_ZIP -d /usr/local 'include/*'
 rm -f $PROTOC_ZIP
-
 protoc --version
-
-#CHECK your vars in /.bash_profile and change if they not correctly
-sed -i '/public-testnet/d' "$HOME/.bash_profile"
-sed -i '/NAMADA_TAG/d' "$HOME/.bash_profile"
-sed -i '/WALLET_ADDRESS/d' "$HOME/.bash_profile"
-sed -i '/CBFT/d' "$HOME/.bash_profile"
-
-#Setting up vars
-
-echo "export NAMADA_TAG=v0.31.2" >> ~/.bash_profile
-echo "export CBFT=v0.37.2" >> ~/.bash_profile
-echo "export NAMADA_CHAIN_ID=shielded-expedition.88f17d1d14" >> ~/.bash_profile
-echo "export KEY_ALIAS=wallet" >> ~/.bash_profile
-echo "export BASE_DIR=$HOME/.local/share/namada" >> ~/.bash_profile
-
-source ~/.bash_profile
 
 cd $HOME && git clone https://github.com/anoma/namada && cd namada && git checkout $NAMADA_TAG
 make build-release
-
 
 cd $HOME && git clone https://github.com/cometbft/cometbft.git && cd cometbft && git checkout $CBFT
 make build
@@ -62,8 +65,6 @@ cp "$HOME/namada/target/release/namadar" /usr/local/bin/namadar
 
 cometbft version
 namada --version
-
-
 
 namada client utils join-network --chain-id $NAMADA_CHAIN_ID
 
