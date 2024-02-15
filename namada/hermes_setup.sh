@@ -34,3 +34,6 @@ sed -i "s/NAMADA_DENOM/$NAMADA_DENOM/g" config.toml
 
 mkdir /root/.hermes
 cp config.toml /root/.hermes/config.toml
+
+rm -rf hermes
+rm -rf config.toml
