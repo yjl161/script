@@ -44,9 +44,9 @@ gas_price = { price = 0.001, denom = 'NAMADA_DENOM' }  # the price isn't used fo
 id = 'osmo-test-5'
 type = "CosmosSdk"
 
-rpc_addr = 'http://127.0.0.1:29657'
-grpc_addr = 'http://127.0.0.1:29090'
-event_source = { mode = 'push', url = 'ws://127.0.0.1:29657/websocket', batch_delay = '500ms' }
+rpc_addr = 'http://127.0.0.1:OSMO_RPC_PORT'
+grpc_addr = 'http://127.0.0.1:OSMO_GRPC_PORT'
+event_source = { mode = 'push', url = 'ws://127.0.0.1:OSMO_RPC_PORT/websocket', batch_delay = '500ms' }
 
 rpc_timeout = '10s'
 account_prefix = 'osmo'
