@@ -13,11 +13,15 @@ echo "============================================================"
 echo "Enter Namada Denom:"
 read NAMADA_DENOM
 echo "============================================================"
+echo "Enter Osmo Relayer Seed:"
+read OSMO_RELAYER_SEED
+echo "============================================================"
 
 echo export NAMADA_CHAIN_ID=${NAMADA_CHAIN_ID} >> $HOME/.bash_profile
 echo export NAMADA_TRUSTING_PERIOD=${NAMADA_TRUSTING_PERIOD} >> $HOME/.bash_profile
 echo export NAMADA_RELAYER=${NAMADA_RELAYER} >> $HOME/.bash_profile
 echo export NAMADA_DENOM=${NAMADA_DENOM} >> $HOME/.bash_profile
+echo $OSMO_RELAYER_SEED > osmo_relayer_seed
 source ~/.bash_profile
 
 wget https://github.com/heliaxdev/hermes/releases/download/v1.7.4-namada-beta7/hermes-v1.7.4-namada-beta7-x86_64-unknown-linux-gnu.zip
@@ -38,3 +42,6 @@ cp config.toml /root/.hermes/config.toml
 rm -rf hermes
 rm -rf config.toml
 hermes keys add --chain $NAMADA_CHAIN_ID --key-file $HOME/.local/share/namada/$NAMADA_CHAIN_ID/wallet.toml
+
+
+hermes keys add --chain osmo-test-5 --mnemonic-file osmo_relayer_seed
