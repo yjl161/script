@@ -27,9 +27,10 @@ cp hermes /usr/local/bin/
 rm -rf hermes-v1.7.4-namada-beta7-x86_64-unknown-linux-gnu.zip
 
 wget -O config.toml https://raw.githubusercontent.com/LUNA007KING/script/main/namada/hermes_config.toml
-sed -i 's/NAMADA_CHAIN_ID/$NAMADA_CHAIN_ID/g' config.toml
-sed -i 's/NAMADA_TRUSTING_PERIOD/$NAMADA_TRUSTING_PERIOD/g' config.toml
-sed -i 's/NAMADA_RELAYER/$NAMADA_RELAYER/g' config.toml
-sed -i 's/NAMADA_DENOM/$NAMADA_DENOM/g' config.toml
+sed -i "s/NAMADA_CHAIN_ID/$NAMADA_CHAIN_ID/g" config.toml
+sed -i "s/NAMADA_TRUSTING_PERIOD/$NAMADA_TRUSTING_PERIOD/g" config.toml
+sed -i "s/NAMADA_RELAYER/$NAMADA_RELAYER/g" config.toml
+sed -i "s/NAMADA_DENOM/$NAMADA_DENOM/g" config.toml
 
+mkdir /root/.hermes
 cp config.toml /root/.hermes/config.toml
