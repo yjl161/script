@@ -36,7 +36,7 @@ trusting_period = 'NAMADA_TRUSTING_PERIOD'
 rpc_timeout = '30s'
 
 account_prefix = ''  # not used
-key_name = 'RELAYER_KEY'  # The key is an account name you made
+key_name = 'NAMADA_RELAYER'  # The key is an account name you made
 store_prefix = 'ibc'
 gas_price = { price = 0.001, denom = 'NAMADA_DENOM' }  # the price isn't used for now, the denom should be a raw token address
 
