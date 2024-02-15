@@ -55,3 +55,23 @@ rm -rf hermes
 rm -rf config.toml
 rm -rf hermes-v1.7.4-namada-beta7-x86_64-unknown-linux-gnu.zip
 rm -rf osmo_relayer_seed
+
+sudo tee /etc/systemd/system/hermesd.service > /dev/null <<EOF
+[Unit]
+Description=Hermes IBC Relayer
+After=network-online.target
+StartLimitIntervalSec=0
+[Service]
+User=root 
+ExecStart=hermes start
+Restart=always 
+RestartSec=120
+[Install]
+WantedBy=multi-user.target
+EOF
+
+sudo systemctl daemon-reload
+sudo systemctl enable hermesd
+sudo systemctl restart hermesd
+
+
