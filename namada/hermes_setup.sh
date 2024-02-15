@@ -42,6 +42,4 @@ cp config.toml /root/.hermes/config.toml
 rm -rf hermes
 rm -rf config.toml
 hermes keys add --chain $NAMADA_CHAIN_ID --key-file $HOME/.local/share/namada/$NAMADA_CHAIN_ID/wallet.toml
-
-
 hermes keys add --chain osmo-test-5 --mnemonic-file osmo_relayer_seed
