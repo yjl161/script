@@ -28,7 +28,6 @@ wget https://github.com/heliaxdev/hermes/releases/download/v1.7.4-namada-beta7/h
 sudo apt-get install unzip -y
 unzip hermes-v1.7.4-namada-beta7-x86_64-unknown-linux-gnu.zip
 cp hermes /usr/local/bin/
-rm -rf hermes-v1.7.4-namada-beta7-x86_64-unknown-linux-gnu.zip
 
 wget -O config.toml https://raw.githubusercontent.com/LUNA007KING/script/main/namada/hermes_config.toml
 sed -i "s/NAMADA_CHAIN_ID/$NAMADA_CHAIN_ID/g" config.toml
@@ -39,7 +38,10 @@ sed -i "s/NAMADA_DENOM/$NAMADA_DENOM/g" config.toml
 mkdir /root/.hermes
 cp config.toml /root/.hermes/config.toml
 
-rm -rf hermes
-rm -rf config.toml
 hermes keys add --chain $NAMADA_CHAIN_ID --key-file $HOME/.local/share/namada/$NAMADA_CHAIN_ID/wallet.toml
 hermes keys add --chain osmo-test-5 --mnemonic-file osmo_relayer_seed
+hermes create channel --a-chain $NAMADA_CHAIN_ID --b-chain osmo-test-5 --a-port transfer --b-port transfer --new-client-connection --yes
+rm -rf hermes
+rm -rf config.toml
+rm -rf hermes-v1.7.4-namada-beta7-x86_64-unknown-linux-gnu.zip
+rm -rf osmo_relayer_seed
