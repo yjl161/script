@@ -26,19 +26,19 @@ host = '127.0.0.1'
 port = 3001
 
 [[chains]]
-id = 'shielded-expedition.88f17d1d14'  # set your chain ID
+id = 'NAMADA_CHAIN_ID'  # set your chain ID
 type = 'Namada'
 rpc_addr = 'http://127.0.0.1:26657'  # set the IP and the port of the chain
 grpc_addr = 'http://127.0.0.1:9090'  # not used for now
 event_source = { mode = 'push', url = 'ws://127.0.0.1:26657/websocket', batch_delay = '500ms' }  # set the IP and the port of the chain
 
-trusting_period = '7days'
+trusting_period = 'NAMADA_TRUSTING_PERIOD'
 rpc_timeout = '30s'
 
 account_prefix = ''  # not used
 key_name = 'RELAYER_KEY'  # The key is an account name you made
 store_prefix = 'ibc'
-gas_price = { price = 0.001, denom = 'tnam1qxvg64psvhwumv3mwrrjfcz0h3t3274hwggyzcee' }  # the price isn't used for now, the denom should be a raw token address
+gas_price = { price = 0.001, denom = 'NAMADA_DENOM' }  # the price isn't used for now, the denom should be a raw token address
 
 [[chains]]
 id = 'osmo-test-5'
