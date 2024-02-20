@@ -68,6 +68,7 @@ namada --version
 
 namada client utils join-network --chain-id $NAMADA_CHAIN_ID
 sed -i 's/laddr = "tcp:\/\/127.0.0.1:26657"/laddr = "tcp:\/\/0.0.0.0:26657"/' ~/.local/share/namada/$NAMADA_CHAIN_ID/config.toml
+sed -i 's/timeout_precommit_delta = "500ms"/timeout_precommit_delta = "0ms"/' /root/.local/share/namada/shielded-expedition.88f17d1d14/config.toml
 
 
 sudo tee /etc/systemd/system/namadad.service > /dev/null <<EOF
