@@ -19,6 +19,7 @@ echo "============================================================"
 echo export NAMADA_TAG=${NAMADA_TAG} >> $HOME/.bash_profile
 echo export CBFT=${CBFT} >> $HOME/.bash_profile
 echo export NAMADA_CHAIN_ID=${CHAIN_ID} >> $HOME/.bash_profile
+echo export IS_TESTNET=${IS_TESTNET} >> $HOME/.bash_profile
 echo "export BASE_DIR=$HOME/.local/share/namada" >> ~/.bash_profile
 source ~/.bash_profile
 
