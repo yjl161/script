@@ -12,6 +12,9 @@ echo "============================================================"
 echo "Enter CBFT:"
 read CBFT
 echo "============================================================"
+echo "Enter Testnet Flag:"
+read IS_TESTNET
+echo "============================================================"
 
 echo export NAMADA_TAG=${NAMADA_TAG} >> $HOME/.bash_profile
 echo export CBFT=${CBFT} >> $HOME/.bash_profile
