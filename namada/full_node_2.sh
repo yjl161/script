@@ -66,7 +66,20 @@ cp "$HOME/namada/target/release/namadar" /usr/local/bin/namadar
 cometbft version
 namada --version
 
-namada client utils join-network --chain-id $NAMADA_CHAIN_ID
+if [ "$IS_TESTNET" = "true" ]; then
+    export NAMADA_NETWORK_CONFIGS_SERVER=https://testnet.luminara.icu/configs
+    namada client utils join-network --chain-id $NAMADA_CHAIN_ID --dont-prefetch-wasm
+    wget https://testnet.luminara.icu/wasm.tar.gz
+    tar -xf wasm.tar.gz
+    cp wasm/* ~/.local/share/namada/$NAMADA_CHAIN_ID/wasm/
+    curl -O https://testnet.luminara.icu/luminara.env
+    PERSISTENT_PEERS=$(grep -oP 'PERSISTENT_PEERS="\K[^"]+' luminara.env)
+    sed -i "s/persistent_peers = \".*\"/persistent_peers = \"$PERSISTENT_PEERS\"/" ~/.local/share/namada/$NAMADA_CHAIN_ID/config.toml
+else
+    namada client utils join-network --chain-id $NAMADA_CHAIN_ID
+fi
+
+rm -rf wasm*
 sed -i 's/laddr = "tcp:\/\/127.0.0.1:26657"/laddr = "tcp:\/\/0.0.0.0:26657"/' ~/.local/share/namada/$NAMADA_CHAIN_ID/config.toml
 sed -i 's/timeout_precommit_delta = "500ms"/timeout_precommit_delta = "0ms"/' ~/.local/share/namada/$NAMADA_CHAIN_ID/config.toml
 sed -i 's/indexer = "null"/indexer = "kv"/g' ~/.local/share/namada/$NAMADA_CHAIN_ID/config.toml
