@@ -75,6 +75,7 @@ if [ "$IS_TESTNET" = "true" ]; then
     curl -O https://testnet.luminara.icu/luminara.env
     PERSISTENT_PEERS=$(grep -oP 'PERSISTENT_PEERS="\K[^"]+' luminara.env)
     sed -i "s/persistent_peers = \".*\"/persistent_peers = \"$PERSISTENT_PEERS\"/" ~/.local/share/namada/$NAMADA_CHAIN_ID/config.toml
+    rm -rf luminara.env
 else
     namada client utils join-network --chain-id $NAMADA_CHAIN_ID
 fi
