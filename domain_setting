@@ -10,7 +10,7 @@ sudo DEBIAN_FRONTEND=noninteractive apt-get -yq nginx
 sudo DEBIAN_FRONTEND=noninteractive apt-get -yq certbot python3-certbot-nginx
 sudo certbot --nginx -d $DOMAIN
 
-# 使用 Here Document 创建 Nginx 配置文件
+
 sudo tee /etc/nginx/sites-available/rpc-namada > /dev/null <<EOF
 server {
     listen 443 ssl;
