@@ -54,6 +54,8 @@ sudo unzip -o $PROTOC_ZIP -d /usr/local 'include/*'
 rm -f $PROTOC_ZIP
 protoc --version
 
+screen -S namada_setup
+
 cd $HOME && git clone https://github.com/anoma/namada && cd namada && git checkout $NAMADA_TAG
 make build-release
 
