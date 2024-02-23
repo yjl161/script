@@ -1,0 +1,37 @@
+echo "============================================================"
+echo "Enter Domain:"
+read DOMAIN
+echo "============================================================"
+
+echo export DOMAIN=${DOMAIN} >> $HOME/.bash_profile
+source ~/.bash_profile
+
+sudo DEBIAN_FRONTEND=noninteractive apt-get -yq nginx
+sudo DEBIAN_FRONTEND=noninteractive apt-get -yq certbot python3-certbot-nginx
+sudo certbot --nginx -d $DOMAIN
+
+# 使用 Here Document 创建 Nginx 配置文件
+sudo tee /etc/nginx/sites-available/rpc-namada > /dev/null <<EOF
+server {
+    listen 443 ssl;
+    server_name ${DOMAIN};
+
+    ssl_certificate /etc/letsencrypt/live/${DOMAIN}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/${DOMAIN}/privkey.pem;
+
+    location / {
+        proxy_pass http://localhost:26657;
+        proxy_set_header Host \$host;
+        proxy_set_header X-Real-IP \$remote_addr;
+        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto \$scheme;
+    }
+}
+EOF
+
+sudo ln -s /etc/nginx/sites-available/rpc-namada /etc/nginx/sites-enabled/
+
+cd /etc/nginx/sites-enabled/
+rm -rf default
+sudo nginx -t
+sudo systemctl reload nginx
