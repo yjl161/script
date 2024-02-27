@@ -29,9 +29,6 @@ source "$HOME/.cargo/env"
 curl https://deb.nodesource.com/setup_18.x | sudo bash
 sudo apt install cargo nodejs -y < "/dev/null"
 
-cargo --version
-node -v
-
 if ! [ -x "$(command -v go)" ]; then
   ver="1.21.3"
   cd $HOME
