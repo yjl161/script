@@ -27,7 +27,7 @@ port = 3001
 
 [[chains]]
 id = 'NAMADA_CHAIN_ID'  # set your chain ID
-memo_prefix = 'MEMO_PRIFIX'
+memo_prefix = 'MEMO_PREFIX'
 type = 'Namada'
 rpc_addr = 'http://127.0.0.1:26657'  # set the IP and the port of the chain
 grpc_addr = 'http://127.0.0.1:9090'  # not used for now
@@ -43,7 +43,7 @@ gas_price = { price = 0.001, denom = 'NAMADA_DENOM' }  # the price isn't used fo
 
 [[chains]]
 id = 'osmo-test-5'
-memo_prefix = 'MEMO_PRIFIX'
+memo_prefix = 'MEMO_PREFIX'
 type = "CosmosSdk"
 
 rpc_addr = 'http://127.0.0.1:OSMO_RPC_PORT'
