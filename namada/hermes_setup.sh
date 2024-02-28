@@ -22,6 +22,9 @@ echo "============================================================"
 echo "Enter Osmo GRPC Port:"
 read OSMO_GRPC_PORT
 echo "============================================================"
+echo "Enter Memo Prefix:"
+read MEMO_PREFIX
+echo "============================================================"
 
 echo export NAMADA_CHAIN_ID=${NAMADA_CHAIN_ID} >> $HOME/.bash_profile
 echo export NAMADA_TRUSTING_PERIOD=${NAMADA_TRUSTING_PERIOD} >> $HOME/.bash_profile
@@ -30,6 +33,7 @@ echo export NAMADA_DENOM=${NAMADA_DENOM} >> $HOME/.bash_profile
 echo $OSMO_RELAYER_SEED > osmo_relayer_seed
 echo export OSMO_RPC_PORT=${OSMO_RPC_PORT} >> $HOME/.bash_profile
 echo export OSMO_GRPC_PORT=${OSMO_GRPC_PORT} >> $HOME/.bash_profile
+echo export MEMO_PREFIX=${MEMO_PREFIX} >> $HOME/.bash_profile
 source ~/.bash_profile
 
 wget https://github.com/heliaxdev/hermes/releases/download/v1.7.4-namada-beta7/hermes-v1.7.4-namada-beta7-x86_64-unknown-linux-gnu.zip
@@ -44,6 +48,7 @@ sed -i "s/NAMADA_RELAYER/$NAMADA_RELAYER/g" config.toml
 sed -i "s/NAMADA_DENOM/$NAMADA_DENOM/g" config.toml
 sed -i "s/OSMO_RPC_PORT/$OSMO_RPC_PORT/g" config.toml
 sed -i "s/OSMO_GRPC_PORT/$OSMO_GRPC_PORT/g" config.toml
+sed -i "s/MEMO_PREFIX/$MEMO_PREFIX/g" config.toml
 
 mkdir /root/.hermes
 cp config.toml /root/.hermes/config.toml
