@@ -9,10 +9,10 @@ echo "Enter Port:"
 read PORT
 echo "============================================================"
 
-echo export DOMAIN=${DOMAIN} >> $HOME/.bash_profile
-echo export EMAIL=${EMAIL} >> $HOME/.bash_profile
-echo export PORT=${PORT} >> $HOME/.bash_profile
-source ~/.bash_profile
+echo "export DOMAIN=${DOMAIN}" >> $HOME/.bash_profile
+echo "export EMAIL=${EMAIL}" >> $HOME/.bash_profile
+echo "export PORT=${PORT}" >> $HOME/.bash_profile
+source $HOME/.bash_profile
 
 sudo DEBIAN_FRONTEND=noninteractive apt-get -yq install nginx
 sudo DEBIAN_FRONTEND=noninteractive apt-get -yq install certbot python3-certbot-nginx
@@ -21,13 +21,13 @@ sudo certbot --nginx -d $DOMAIN --non-interactive --agree-tos --email $EMAIL
 sudo tee /etc/nginx/sites-available/rpc-namada > /dev/null <<EOF
 server {
     listen 443 ssl;
-    server_name ${DOMAIN};
+    server_name $DOMAIN;
 
-    ssl_certificate /etc/letsencrypt/live/${DOMAIN}/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/${DOMAIN}/privkey.pem;
+    ssl_certificate /etc/letsencrypt/live/$DOMAIN/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/$DOMAIN/privkey.pem;
 
     location / {
-        if ($request_method = 'OPTIONS') {
+        if (\$request_method = 'OPTIONS') {
             add_header 'Access-Control-Allow-Origin' '*';
             add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
             add_header 'Access-Control-Allow-Headers' 'DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range';
@@ -40,11 +40,11 @@ server {
         add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
         add_header 'Access-Control-Allow-Headers' 'DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range';
 
-        proxy_pass http://localhost:${PORT};
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_pass http://localhost:$PORT;
+        proxy_set_header Host \$host;
+        proxy_set_header X-Real-IP \$remote_addr;
+        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto \$scheme;
     }
 }
 EOF
@@ -52,6 +52,6 @@ EOF
 sudo ln -s /etc/nginx/sites-available/rpc-namada /etc/nginx/sites-enabled/
 
 cd /etc/nginx/sites-enabled/
-rm -rf default
+sudo rm -f default
 sudo nginx -t
 sudo systemctl reload nginx
