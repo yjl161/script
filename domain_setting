@@ -5,9 +5,13 @@ echo "============================================================"
 echo "Enter Email:"
 read EMAIL
 echo "============================================================"
+echo "Enter Port:"
+read PORT
+echo "============================================================"
 
 echo export DOMAIN=${DOMAIN} >> $HOME/.bash_profile
 echo export EMAIL=${EMAIL} >> $HOME/.bash_profile
+echo export PORT=${PORT} >> $HOME/.bash_profile
 source ~/.bash_profile
 
 sudo DEBIAN_FRONTEND=noninteractive apt-get -yq install nginx
@@ -23,7 +27,7 @@ server {
     ssl_certificate_key /etc/letsencrypt/live/${DOMAIN}/privkey.pem;
 
     location / {
-        proxy_pass http://localhost:26657;
+        proxy_pass http://localhost:${PORT};
         proxy_set_header Host \$host;
         proxy_set_header X-Real-IP \$remote_addr;
         proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
