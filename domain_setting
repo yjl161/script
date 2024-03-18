@@ -22,7 +22,7 @@ sudo DEBIAN_FRONTEND=noninteractive apt-get -yq install nginx
 sudo DEBIAN_FRONTEND=noninteractive apt-get -yq install certbot python3-certbot-nginx
 sudo certbot --nginx -d $DOMAIN --non-interactive --agree-tos --email $EMAIL
 
-sudo tee /etc/nginx/sites-available/$DOMAIN-namada > /dev/null <<EOF
+sudo tee /etc/nginx/sites-available/$TYPE-namada > /dev/null <<EOF
 server {
     listen 443 ssl;
     server_name $DOMAIN;
@@ -53,7 +53,7 @@ server {
 }
 EOF
 
-sudo ln -s /etc/nginx/sites-available/$DOMAIN-namada /etc/nginx/sites-enabled/
+sudo ln -s /etc/nginx/sites-available/$TYPE-namada /etc/nginx/sites-enabled/
 
 cd /etc/nginx/sites-enabled/
 sudo rm -f default
