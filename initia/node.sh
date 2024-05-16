@@ -73,6 +73,7 @@ cd initia
 git checkout $INITIA_TAG
 make install
 initiad version
+cp $HOME/go/bin/initiad /usr/local/bin/initiad
 
 initiad init $MONIKER --chain-id $CHAIN_ID
 curl -Ls https://initia.s3.ap-southeast-1.amazonaws.com/initiation-1/genesis.json > $HOME/.initia/config/genesis.json
@@ -108,6 +109,7 @@ systemctl stop initiad
 initiad tendermint unsafe-reset-all --home $HOME/.initia --keep-addr-book
 curl -o - -L $SNAPSHOT_LINK | lz4 -c -d - | tar -x -C $HOME/.initia
 systemctl start initiad
+
 
 # export DAEMON_HOME=~/.initia
 # export DAEMON_NAME=initiad
