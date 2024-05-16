@@ -1,4 +1,20 @@
+#!/bin/bash
 
+echo "============================================================"
+echo "Install start"
+echo "============================================================"
+echo "Enter Namada Version:"
+read NAMADA_TAG
+echo "============================================================"
+echo "Enter Chain Id:"
+read CHAIN_ID
+echo "============================================================"
+echo "Enter CBFT:"
+read CBFT
+echo "============================================================"
+echo "Enter Testnet Flag:"
+read IS_TESTNET
+echo "============================================================"
 
 sudo apt update
 sudo apt install curl git jq build-essential gcc unzip wget lz4 -y
