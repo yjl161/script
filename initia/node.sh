@@ -16,8 +16,9 @@ echo "Enter Testnet Flag:"
 read IS_TESTNET
 echo "============================================================"
 
-sudo apt update
-sudo apt install curl git jq build-essential gcc unzip wget lz4 -y
+sudo apt update -y
+sudo DEBIAN_FRONTEND=noninteractive apt-get -yq install curl git jq build-essential gcc unzip wget lz4
+
 cd $HOME && \
 ver="1.21.3" && \
 wget "https://golang.org/dl/go$ver.linux-amd64.tar.gz" && \
