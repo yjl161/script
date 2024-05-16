@@ -15,6 +15,9 @@ echo "============================================================"
 echo "Enter Moniker:"
 read MONIKER
 echo "============================================================"
+echo "Enter Snapshot Link:"
+read SNAPSHOT_LINK
+echo "============================================================"
 
 sudo apt update -y
 sudo DEBIAN_FRONTEND=noninteractive apt-get -yq install curl git jq build-essential gcc unzip wget lz4
@@ -80,22 +83,28 @@ sed -i -e "s/^seeds *=.*/seeds = \"$SEEDS\"/; s/^persistent_peers *=.*/persisten
 sed -i '/^\[oracle\]$/,/^\[/ s/^enabled = .*/enabled = "true"/; s/^oracle_address = .*/oracle_address = "127.0.0.1:8080"/' /root/.initia/config/app.toml
 sed -i -e "s/^minimum-gas-prices *=.*/minimum-gas-prices = \"0.15uinit,0.01uusdc\"/" $HOME/.initia/config/app.toml
 
-sudo tee /etc/systemd/system/initiad.service > /dev/null <<EOF
+sudo tee /etc/systemd/system/initiad.service > /dev/null << EOF
 [Unit]
-Description=initia node
-After=network-online.target
+Description=initiad
 
 [Service]
-User=$USER
-ExecStart=$(which initiad) start
-Restart=on-failure
-RestartSec=10
+Type=simple
+User=root
+ExecStart=/root/go/bin/initiad start
+Restart=on-abort
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=initiad
 LimitNOFILE=65535
 
 [Install]
 WantedBy=multi-user.target
 EOF
 
-sudo systemctl daemon-reload
-sudo systemctl enable initiad 
-sudo systemctl start initiad
+systemctl enable initiad
+systemctl start initiad
+systemctl stop initiad
+
+initiad tendermint unsafe-reset-all --home $HOME/.initia --keep-addr-book
+curl -o - -L $SNAPSHOT_LINK | lz4 -c -d - | tar -x -C $HOME/.initia
+systemctl start initiad
