@@ -108,3 +108,30 @@ systemctl stop initiad
 initiad tendermint unsafe-reset-all --home $HOME/.initia --keep-addr-book
 curl -o - -L $SNAPSHOT_LINK | lz4 -c -d - | tar -x -C $HOME/.initia
 systemctl start initiad
+
+export DAEMON_HOME=~/.initia
+export DAEMON_NAME=initiad
+go install cosmossdk.io/tools/cosmovisor/cmd/cosmovisor@latest
+cosmovisor init /root/go/bin/initiad 
+sudo tee /etc/systemd/system/initiad.service > /dev/null << EOF
+[Unit]
+Description=initiad
+
+[Service]
+Type=simple
+User=root
+ExecStart=/root/go/bin/cosmovisor run start --home /root/.initia
+Restart=on-abort
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=initiad
+LimitNOFILE=4096
+Environment="DAEMON_NAME=initiad"
+Environment="DAEMON_HOME=/root/.initia"
+Environment="DAEMON_ALLOW_DOWNLOAD_BINARIES=false"
+Environment="DAEMON_RESTART_AFTER_UPGRADE=true"
+Environment="LD_LIBRARY_PATH=/root/.initia/cosmovisor/current/bin"
+
+[Install]
+WantedBy=multi-user.target
+EOF
