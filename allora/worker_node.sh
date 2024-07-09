@@ -3,9 +3,13 @@
 echo "============================================================"
 echo "Install start"
 echo "============================================================"
+echo "Enter Wallet Name:"
+read WALLET_NAME
+echo "============================================================"
 echo "Enter Seed:"
 read ALLORA_SEED
 
+echo export WALLET_NAME=${WALLET_NAME} >> $HOME/.bash_profile
 echo export ALLORA_SEED=${ALLORA_SEED} >> $HOME/.bash_profile
 source ~/.bash_profile
 
@@ -41,5 +45,6 @@ git clone https://github.com/allora-network/allora-chain.git
 cd allora-chain && make all
 
 # Wallet setup
-allorad keys add testkey --recover <<< "$ALLORA_SEED"
+allorad keys add $WALLET_NAME --recover --keyring-backend test 
+$ALLORA_SEED
 
