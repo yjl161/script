@@ -10,7 +10,7 @@ echo "Enter Seed:"
 read ALLORA_SEED
 
 echo export WALLET_NAME=${WALLET_NAME} >> $HOME/.bash_profile
-echo export ALLORA_SEED=${ALLORA_SEED} >> $HOME/.bash_profile
+echo "export ALLORA_SEED=\"$ALLORA_SEED\"" >> $HOME/.bash_profile
 source ~/.bash_profile
 
 # Update and install required packages
