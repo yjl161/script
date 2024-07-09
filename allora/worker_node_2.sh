@@ -7,12 +7,8 @@ sudo chmod -R 777 worker-data head-data
 sudo docker run -it --entrypoint=bash -v $(pwd)/head-data:/data alloranetwork/allora-inference-base:latest -c "mkdir -p /data/keys && (cd /data/keys && allora-keys)"
 sudo docker run -it --entrypoint=bash -v $(pwd)/worker-data:/data alloranetwork/allora-inference-base:latest -c "mkdir -p /data/keys && (cd /data/keys && allora-keys)"
 
-echo "Your head-id is: "
-cat head-data/keys/identity
-echo
-
-read -p "Re-enter your head-id: " head_id
-read -p "Enter your wallet seed phrases: " wallet_seed
+head_id=$(cat head-data/keys/identity)
+echo "Your head-id is: $head_id"
 
 
 cat <<EOF > docker-compose.yml
@@ -85,7 +81,7 @@ services:
           --boot-nodes=/ip4/172.22.0.100/tcp/9010/p2p/$head_id \
           --topic=allora-topic-1-worker \
           --allora-chain-key-name=testkey \
-          --allora-chain-restore-mnemonic='$wallet_seed' \
+          --allora-chain-restore-mnemonic='$ALLORA_SEED' \
           --allora-node-rpc-address=https://allora-rpc.edgenet.allora.network/ \
           --allora-chain-topic-id=1
     volumes:
