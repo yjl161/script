@@ -6,6 +6,8 @@ echo "============================================================"
 echo "Enter Seed:"
 read ALLORA_SEED
 
+echo export ALLORA_SEED=${ALLORA_SEED} >> $HOME/.bash_profile
+source ~/.bash_profile
 
 # Update and install required packages
 sudo apt update && sudo apt upgrade -y
