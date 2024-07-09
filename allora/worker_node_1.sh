@@ -43,10 +43,5 @@ source $HOME/.bash_profile
 # Clone and build Allora chain
 git clone https://github.com/allora-network/allora-chain.git
 cd allora-chain && make all
-
-# Wallet setup
-allorad keys add $WALLET_NAME --recover --keyring-backend test 
-$ALLORA_SEED
-
 allorad version
 
