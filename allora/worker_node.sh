@@ -48,3 +48,5 @@ cd allora-chain && make all
 allorad keys add $WALLET_NAME --recover --keyring-backend test 
 $ALLORA_SEED
 
+allorad version
+
