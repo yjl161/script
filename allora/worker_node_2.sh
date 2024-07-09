@@ -141,5 +141,5 @@ EOF
 docker-compose build
 docker-compose up -d
 
-echo "Your head-id is: $head_id----"
+echo "Your head-id is: $head_id----setup_finished"
 
