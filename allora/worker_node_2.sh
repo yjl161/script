@@ -80,7 +80,7 @@ services:
           --private-key=/data/keys/priv.bin --log-level=debug --port=9011 \
           --boot-nodes=/ip4/172.22.0.100/tcp/9010/p2p/$head_id \
           --topic=allora-topic-1-worker \
-          --allora-chain-key-name=testkey \
+          --allora-chain-key-name=$WALLET_NAME \
           --allora-chain-restore-mnemonic='$ALLORA_SEED' \
           --allora-node-rpc-address=https://allora-rpc.edgenet.allora.network/ \
           --allora-chain-topic-id=1
