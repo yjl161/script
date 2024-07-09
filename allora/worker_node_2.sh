@@ -8,8 +8,6 @@ sudo docker run -it --entrypoint=bash -v $(pwd)/head-data:/data alloranetwork/al
 sudo docker run -it --entrypoint=bash -v $(pwd)/worker-data:/data alloranetwork/allora-inference-base:latest -c "mkdir -p /data/keys && (cd /data/keys && allora-keys)"
 
 head_id=$(cat head-data/keys/identity)
-echo "Your head-id is: $head_id"
-
 
 cat <<EOF > docker-compose.yml
 version: '3'
@@ -139,3 +137,9 @@ volumes:
   worker-data:
   head-data:
 EOF
+
+docker-compose build
+docker-compose up -d
+
+echo "Your head-id is: $head_id----"
+
