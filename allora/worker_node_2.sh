@@ -2,7 +2,7 @@ cd $HOME
 git clone https://github.com/allora-network/basic-coin-prediction-node
 cd basic-coin-prediction-node
 mkdir worker-data1 worker-data2 worker-data7 head-data
-sudo chmod -R 777 worker-data1 worker-data2 worker-data7 worker-data11 head-data
+sudo chmod -R 777 worker-data1 worker-data2 worker-data7 head-data
 
 sudo docker run -it --entrypoint=bash -v $(pwd)/head-data:/data alloranetwork/allora-inference-base:latest -c "mkdir -p /data/keys && (cd /data/keys && allora-keys)"
 sudo docker run -it --entrypoint=bash -v $(pwd)/worker-data1:/data alloranetwork/allora-inference-base:latest -c "mkdir -p /data/keys && (cd /data/keys && allora-keys)"
