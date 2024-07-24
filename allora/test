@@ -17,7 +17,7 @@ cat <<EOF > docker-compose.yml
 version: '3'
 services:
   inference:
-    container_name: inference-basic-eth-pred
+    container_name: inference
     build:
       context: .
     command: python -u /app/app.py
@@ -31,14 +31,15 @@ services:
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/inference/ETH"]
       interval: 10s
-      timeout: 5s
+      timeout: 10s
       retries: 12
+      start_period: 60s
     volumes:
       - ./inference-data:/app/data
     restart: always
 
   updater:
-    container_name: updater-basic-eth-pred
+    container_name: updater
     build: .
     environment:
       - INFERENCE_API_ADDRESS=http://inference:8000
@@ -46,7 +47,7 @@ services:
       sh -c "
       while true; do
         python -u /app/update_app.py;
-        sleep 24h;
+        sleep 600;
       done
       "
     depends_on:
@@ -80,12 +81,14 @@ services:
         allora-node --role=worker --peer-db=/data/peerdb --function-db=/data/function-db \
           --runtime-path=/app/runtime --runtime-cli=bls-runtime --workspace=/data/workspace \
           --private-key=/data/keys/priv.bin --log-level=debug --port=9011 \
-          --boot-nodes=/ip4/172.22.0.100/tcp/9010/p2p/$head_id,/dns/head-0-p2p.testnet-1.testnet.allora.network/tcp/32130/p2p/12D3KooWLBhsSucVVcyVCaM9pvK8E7tWBM9L19s7XQHqqejyqgEC,/dns/head-1-p2p.testnet-1.testnet.allora.network/tcp/32131/p2p/12D3KooWEUNWg7YHeeCtH88ju63RBfY5hbdv9hpv84ffEZpbJszt,/dns/head-2-p2p.testnet-1.testnet.allora.network/tcp/32132/p2p/12D3KooWATfUSo95wtZseHbogpckuFeSvpL4yks6XtvrjVHcCCXk \
+          --boot-nodes=/ip4/172.22.0.100/tcp/9010/p2p/$head_id \
           --topic=allora-topic-1-worker \
           --allora-chain-key-name=$WALLET_NAME \
           --allora-chain-restore-mnemonic='$ALLORA_SEED' \
           --allora-node-rpc-address=https://allora-rpc.testnet-1.testnet.allora.network \
-          --allora-chain-topic-id=1
+          --allora-chain-topic-id=1 \
+          --allora-chain-initial-stake=1000 \
+          --allora-chain-worker-mode=worker
     volumes:
       - ./worker-data1:/data
     working_dir: /data
@@ -120,12 +123,14 @@ services:
         allora-node --role=worker --peer-db=/data/peerdb --function-db=/data/function-db \
           --runtime-path=/app/runtime --runtime-cli=bls-runtime --workspace=/data/workspace \
           --private-key=/data/keys/priv.bin --log-level=debug --port=9012 \
-          --boot-nodes=/ip4/172.22.0.100/tcp/9010/p2p/$head_id,/dns/head-0-p2p.testnet-1.testnet.allora.network/tcp/32130/p2p/12D3KooWLBhsSucVVcyVCaM9pvK8E7tWBM9L19s7XQHqqejyqgEC,/dns/head-1-p2p.testnet-1.testnet.allora.network/tcp/32131/p2p/12D3KooWEUNWg7YHeeCtH88ju63RBfY5hbdv9hpv84ffEZpbJszt,/dns/head-2-p2p.testnet-1.testnet.allora.network/tcp/32132/p2p/12D3KooWATfUSo95wtZseHbogpckuFeSvpL4yks6XtvrjVHcCCXk \
+          --boot-nodes=/ip4/172.22.0.100/tcp/9010/p2p/$head_id \
           --topic=allora-topic-2-worker \
           --allora-chain-key-name=$WALLET_NAME \
           --allora-chain-restore-mnemonic='$ALLORA_SEED' \
           --allora-node-rpc-address=https://allora-rpc.testnet-1.testnet.allora.network \
           --allora-chain-topic-id=2
+          --allora-chain-initial-stake=1000 \
+          --allora-chain-worker-mode=worker
     volumes:
       - ./worker-data2:/data
     working_dir: /data
@@ -160,12 +165,14 @@ services:
         allora-node --role=worker --peer-db=/data/peerdb --function-db=/data/function-db \
           --runtime-path=/app/runtime --runtime-cli=bls-runtime --workspace=/data/workspace \
           --private-key=/data/keys/priv.bin --log-level=debug --port=9017 \
-          --boot-nodes=/ip4/172.22.0.100/tcp/9010/p2p/$head_id,/dns/head-0-p2p.testnet-1.testnet.allora.network/tcp/32130/p2p/12D3KooWLBhsSucVVcyVCaM9pvK8E7tWBM9L19s7XQHqqejyqgEC,/dns/head-1-p2p.testnet-1.testnet.allora.network/tcp/32131/p2p/12D3KooWEUNWg7YHeeCtH88ju63RBfY5hbdv9hpv84ffEZpbJszt,/dns/head-2-p2p.testnet-1.testnet.allora.network/tcp/32132/p2p/12D3KooWATfUSo95wtZseHbogpckuFeSvpL4yks6XtvrjVHcCCXk \
+          --boot-nodes=/ip4/172.22.0.100/tcp/9010/p2p/$head_id \
           --topic=allora-topic-7-worker \
           --allora-chain-key-name=$WALLET_NAME \
           --allora-chain-restore-mnemonic='$ALLORA_SEED' \
           --allora-node-rpc-address=https://allora-rpc.testnet-1.testnet.allora.network \
           --allora-chain-topic-id=7
+          --allora-chain-initial-stake=1000 \
+          --allora-chain-worker-mode=worker
     volumes:
       - ./worker-data7:/data
     working_dir: /data
@@ -177,46 +184,6 @@ services:
         aliases:
           - worker
         ipv4_address: 172.22.0.17
-    restart: always
-
-  worker-10:
-    container_name: worker-10
-    environment:
-      - INFERENCE_API_ADDRESS=http://inference:8000
-      - HOME=/data
-    build:
-      context: .
-      dockerfile: Dockerfile_b7s
-    entrypoint:
-      - "/bin/bash"
-      - "-c"
-      - |
-        if [ ! -f /data/keys/priv.bin ]; then
-          echo "Generating new private keys..."
-          mkdir -p /data/keys
-          cd /data/keys
-          allora-keys
-        fi
-        allora-node --role=worker --peer-db=/data/peerdb --function-db=/data/function-db \
-          --runtime-path=/app/runtime --runtime-cli=bls-runtime --workspace=/data/workspace \
-          --private-key=/data/keys/priv.bin --log-level=debug --port=9020 \
-          --boot-nodes=/ip4/172.22.0.100/tcp/9010/p2p/$head_id,/dns/head-0-p2p.testnet-1.testnet.allora.network/tcp/32130/p2p/12D3KooWLBhsSucVVcyVCaM9pvK8E7tWBM9L19s7XQHqqejyqgEC,/dns/head-1-p2p.testnet-1.testnet.allora.network/tcp/32131/p2p/12D3KooWEUNWg7YHeeCtH88ju63RBfY5hbdv9hpv84ffEZpbJszt,/dns/head-2-p2p.testnet-1.testnet.allora.network/tcp/32132/p2p/12D3KooWATfUSo95wtZseHbogpckuFeSvpL4yks6XtvrjVHcCCXk \
-          --topic=allora-topic-10-worker \
-          --allora-chain-key-name=$WALLET_NAME \
-          --allora-chain-restore-mnemonic='$ALLORA_SEED' \
-          --allora-node-rpc-address=https://allora-rpc.testnet-1.testnet.allora.network \
-          --allora-chain-topic-id=10
-    volumes:
-      - ./worker-data10:/data
-    working_dir: /data
-    depends_on:
-      - inference
-      - head
-    networks:
-      eth-model-local:
-        aliases:
-          - worker
-        ipv4_address: 172.22.0.20
     restart: always
 
   worker-11:
@@ -240,12 +207,14 @@ services:
         allora-node --role=worker --peer-db=/data/peerdb --function-db=/data/function-db \
           --runtime-path=/app/runtime --runtime-cli=bls-runtime --workspace=/data/workspace \
           --private-key=/data/keys/priv.bin --log-level=debug --port=9021 \
-          --boot-nodes=/ip4/172.22.0.100/tcp/9010/p2p/$head_id,/dns/head-0-p2p.testnet-1.testnet.allora.network/tcp/32130/p2p/12D3KooWLBhsSucVVcyVCaM9pvK8E7tWBM9L19s7XQHqqejyqgEC,/dns/head-1-p2p.testnet-1.testnet.allora.network/tcp/32131/p2p/12D3KooWEUNWg7YHeeCtH88ju63RBfY5hbdv9hpv84ffEZpbJszt,/dns/head-2-p2p.testnet-1.testnet.allora.network/tcp/32132/p2p/12D3KooWATfUSo95wtZseHbogpckuFeSvpL4yks6XtvrjVHcCCXk \
+          --boot-nodes=/ip4/172.22.0.100/tcp/9010/p2p/$head_id \
           --topic=allora-topic-11-worker \
           --allora-chain-key-name=$WALLET_NAME \
           --allora-chain-restore-mnemonic='$ALLORA_SEED' \
           --allora-node-rpc-address=https://allora-rpc.testnet-1.testnet.allora.network \
           --allora-chain-topic-id=11
+          --allora-chain-initial-stake=1000 \
+          --allora-chain-worker-mode=worker
     volumes:
       - ./worker-data11:/data
     working_dir: /data
@@ -260,7 +229,7 @@ services:
     restart: always
 
   head:
-    container_name: head-basic-eth-pred
+    container_name: head
     image: alloranetwork/allora-inference-base-head:latest
     environment:
       - HOME=/data
@@ -276,7 +245,9 @@ services:
         fi
         allora-node --role=head --peer-db=/data/peerdb --function-db=/data/function-db  \
           --runtime-path=/app/runtime --runtime-cli=bls-runtime --workspace=/data/workspace \
-          --private-key=/data/keys/priv.bin --log-level=debug --port=9010 --rest-api=:6000
+          --private-key=/data/keys/priv.bin --log-level=debug --port=9010 --rest-api=:6000 \
+          --allora-chain-restore-mnemonic='$ALLORA_SEED' \
+          --allora-chain-initial-stake=1000
     ports:
       - "6000:6000"
     volumes:
@@ -294,7 +265,7 @@ networks:
     driver: bridge
     ipam:
       config:
-        - subnet: 172.22.0.0/24
+        - subnet: 172.22.0.0/16
 
 volumes:
   inference-data:
