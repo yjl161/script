@@ -58,3 +58,4 @@ chmod +x init.config
 ./init.config
 
 docker compose up -d --build
+docker compose logs -f worker
