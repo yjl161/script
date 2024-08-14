@@ -4,7 +4,6 @@ git clone https://github.com/allora-network/basic-coin-prediction-node
 cd basic-coin-prediction-node
 
 rm -rf config.json
-nano config.json
 
 cat <<EOF > config.json
 {
