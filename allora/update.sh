@@ -1,3 +1,4 @@
+#!/bin/bash
 cd $HOME
 git clone https://github.com/allora-network/basic-coin-prediction-node
 cd basic-coin-prediction-node
