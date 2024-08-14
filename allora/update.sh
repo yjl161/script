@@ -1,4 +1,8 @@
 #!/bin/bash
+cd $HOME && cd basic-coin-prediction-node
+docker compose down -v
+cd $HOME && rm -rf basic-coin-prediction-node
+
 cd $HOME
 git clone https://github.com/allora-network/basic-coin-prediction-node
 cd basic-coin-prediction-node
