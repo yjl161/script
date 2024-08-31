@@ -1,3 +1,5 @@
+#!/bin/bash
+
 sudo apt update -y
 sudo apt install curl jq -y
 curl -fsSL https://get.docker.com -o get-docker.sh
