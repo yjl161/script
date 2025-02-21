@@ -1,6 +1,7 @@
 #!/bin/sh
 
 sudo apt update && sudo apt upgrade -y
+sleep 5
 sudo apt install -y git curl pkg-config libssl-dev protobuf-compiler screen unzip
 sudo apt install -y cargo 
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
