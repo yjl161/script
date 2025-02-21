@@ -1,3 +1,25 @@
+#!/bin/sh
+
+sudo apt update && sudo apt upgrade -y
+sudo apt install -y git curl pkg-config libssl-dev protobuf-compiler screen unzip
+sudo apt install -y cargo 
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+source $HOME/.cargo/env
+echo 'export PATH="$HOME/.cargo/bin:$PATH"' >> ~/.bashrc
+source ~/.bashrc
+rustup update
+curl -LO https://github.com/protocolbuffers/protobuf/releases/download/v25.2/protoc-25.2-linux-x86_64.zip
+unzip protoc-25.2-linux-x86_64.zip -d $HOME/.local
+export PATH="$HOME/.local/bin:$PATH"
+
+sudo swapoff -a
+sudo fallocate -l 8G /swapfile
+sudo chmod 600 /swapfile
+sudo mkswap /swapfile
+sudo swapon /swapfile
+
+rustup target add riscv32i-unknown-none-elf
+
 NEXUS_HOME="$HOME/.nexus"
 GREEN='\033[1;32m'
 ORANGE='\033[1;33m'
