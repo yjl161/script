@@ -57,10 +57,11 @@ fi
   git -c advice.detachedHead=false checkout "$(git rev-list --tags --max-count=1)"
 )
 
+cd $HOME/.nexus/network-api/clients/cli
+
 SCREEN_SESSION="nexus_prover"
 screen -dmS "$SCREEN_SESSION" bash -c "
   echo \"y\" | (
-    cd \"$HOME/.nexus/network-api/clients/cli\" || exit
     cargo run -r -- start --env beta
   )
 "
