@@ -57,14 +57,3 @@ fi
   cd "$REPO_PATH" || exit
   git -c advice.detachedHead=false checkout "$(git rev-list --tags --max-count=1)"
 )
-
-cd $HOME/.nexus/network-api/clients/cli
-
-SCREEN_SESSION="nexus_prover"
-screen -dmS "$SCREEN_SESSION" bash -c "
-  source $HOME/.cargo/env  # 确保 screen 会话中的环境变量已加载
-  sleep 2  # 等待一会儿，确保 Rust 工具链加载完毕
-  echo \"y\" | (
-    cargo run -r -- start --env beta
-  )
-"
