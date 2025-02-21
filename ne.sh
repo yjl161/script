@@ -43,10 +43,10 @@ fi
 REPO_PATH="$NEXUS_HOME/network-api"
 
 # Clone or update the repository
-if [ -d "$REPO_PATH" ]; then
-  echo "$REPO_PATH exists. Updating."
+if [ -d "$HOME/.nexus/network-api" ]; then
+  echo "$HOME/.nexus/network-api exists. Updating."
   (
-    cd "$REPO_PATH" || exit
+    cd "$HOME/.nexus/network-api" || exit
     git stash
     git fetch --tags
   )
@@ -59,13 +59,13 @@ fi
 
 # Check out the latest tagged commit
 (
-  cd "$REPO_PATH" || exit
+  cd "$HOME/.nexus/network-api" || exit
   git -c advice.detachedHead=false checkout "$(git rev-list --tags --max-count=1)"
 )
 
 # Check if there are uncommitted changes (which could indicate the repo is not fully updated)
 (
-  cd "$REPO_PATH" || exit
+  cd "$HOME/.nexus/network-api" || exit
   if git diff-index --quiet HEAD --; then
     echo "Repository is clean and up-to-date."
   else
