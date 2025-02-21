@@ -77,7 +77,7 @@ fi
 # Wait until cargo dependencies are installed and the project is ready
 echo "Ensuring cargo dependencies are up to date..."
 (
-  cd "$REPO_PATH" || exit
+  cd "$HOME/.nexus/network-api" || exit
   cargo fetch
   cargo build --release
 )
