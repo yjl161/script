@@ -60,7 +60,7 @@ fi
 SCREEN_SESSION="nexus_prover"
 screen -dmS "$SCREEN_SESSION" bash -c "
   echo \"y\" | (
-    cd \"$REPO_PATH/clients/cli\" || exit
+    cd \"$HOME/.nexus/network-api/clients/cli\" || exit
     cargo run -r -- start --env beta
   )
 "
